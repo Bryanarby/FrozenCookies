@@ -56,7 +56,7 @@ function setOverrides() {
   FrozenCookies.caches.recommendationList = [];
   FrozenCookies.caches.buildings = [];
   FrozenCookies.caches.upgrades = [];
-  FrozenCookies.autoCookie = {};
+  FrozenCookies.autoCookies = [];
   
   if (!blacklist[FrozenCookies.blacklist]) {
     FrozenCookies.blacklist = 'none';
