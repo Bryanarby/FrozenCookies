@@ -7,7 +7,7 @@ FrozenCookies.preferenceValues = {
   'autoHCReset':{
     'hint':'Automatically reset at a given HC gained',
     'display':["AutoHCReset OFF","AutoHCReset ON"],
-    'default':0
+    'default':0,
     'extras':'<a class="option" id="HCResetValue" onclick="updateLimit(\'HCResetValue\');">${HCResetValue} HC/reset</a>'
   },
   'autoGC':{
