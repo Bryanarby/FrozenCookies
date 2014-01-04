@@ -56,6 +56,7 @@ function setOverrides() {
   FrozenCookies.caches.recommendationList = [];
   FrozenCookies.caches.buildings = [];
   FrozenCookies.caches.upgrades = [];
+  FrozenCookies.autoCookie = {};
   
   if (!blacklist[FrozenCookies.blacklist]) {
     FrozenCookies.blacklist = 'none';
@@ -233,6 +234,7 @@ function fcReset(bypass) {
   FrozenCookies.maxHCPercent = 0;
   FrozenCookies.prevLastHCTime = Date.now();
   FrozenCookies.lastCps = 0;
+  FrozenCookies.HCResetReady = false;
   updateLocalStorage();
   recommendationList(true);
 }
