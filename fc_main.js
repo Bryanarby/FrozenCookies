@@ -355,16 +355,17 @@ function updateTimeTravelAmount() {
 //return a function by name
 //there's probably a better way to do this but yeah..
 function getFunctionByName(functionName){
-  switch:
-    case 'autoBlacklistOff': return this.autoBlacklistOff;
-    case 'autoBuy': return this.autoBuy;
-//    case 'autoClick': return this.autoClick;
-//    case 'autoFrenzy': return this.autoFrenzy;
-//    case 'autoGC': return this.autoGC;
-    case 'autoHCReset': return this.autoHCReset;
-    case 'autoReindeer': return this.autoReindeer;
-    case 'autoWrinkler': return this.autoWrinkler;
-    default: return null;
+  switch (functionName) {
+    case 'autoBlacklistOff': return this.autoBlacklistOff; break;
+    case 'autoBuy': return this.autoBuy; break;
+//    case 'autoClick': return this.autoClick; break;
+//    case 'autoFrenzy': return this.autoFrenzy; break;
+//    case 'autoGC': return this.autoGC; break;
+    case 'autoHCReset': return this.autoHCReset; break;
+    case 'autoReindeer': return this.autoReindeer; break;
+    case 'autoWrinkler': return this.autoWrinkler; break;
+    default: return null; break;
+  }
 }
 
 //update the array of functions that need to be called in autoCookie()
