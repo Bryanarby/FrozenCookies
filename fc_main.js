@@ -352,6 +352,44 @@ function updateTimeTravelAmount() {
   FrozenCookies.timeTravelAmount = newAmount;
 }
 
+//return a function by name
+//there's probably a better way to do this but yeah..
+function getFunctionByName(functionName){
+  switch:
+    case 'autoBlacklistOff': return this.autoBlacklistOff;
+    case 'autoBuy': return this.autoBuy;
+//    case 'autoClick': return this.autoClick;
+//    case 'autoFrenzy': return this.autoFrenzy;
+//    case 'autoGC': return this.autoGC;
+    case 'autoHCReset': return this.autoHCReset;
+    case 'autoReindeer': return this.autoReindeer;
+    case 'autoWrinkler': return this.autoWrinkler;
+    default: return null;
+}
+
+//update the array of functions that need to be called in autoCookie()
+function updateAutoCookies(preferenceName, value) {
+/*  if (preferenceName.contains("auto")) {
+    var index = FrozenCookies.autoCookies.indexOf(preferenceName);
+    if (value) {
+      if (index == -1) {
+      	var func = getFunctionByName(preferenceName);
+      	if (func) {
+      	  FrozenCookies.autoCookies.push(getFunctionByName(preferenceName));
+      	  logEvent('AutoManager', 'Turned on ' + preferenceName);
+      	}
+      }
+    } else {
+      if (index > -1) {
+        FrozenCookies.autoCookies.splice(index,1);
+      	logEvent('AutoManager', 'Turned ' + preferenceName + ' off');
+      }
+    }
+  }
+  
+*/
+}
+
 function cyclePreference(preferenceName) {
   var preference = FrozenCookies.preferenceValues[preferenceName];
   if (preference) {
@@ -362,6 +400,7 @@ function cyclePreference(preferenceName) {
       var newValue = (current + 1) % display.length;
       preferenceButton[0].innerText = display[newValue];
       FrozenCookies[preferenceName] = newValue;
+      updateAutoCookies(preferenceName, newValue);
       updateLocalStorage();
       FrozenCookies.recalculateCaches = true;
       Game.RebuildStore();
@@ -1043,6 +1082,55 @@ function autoFrenzyClick() {
   }
 }
 
+function autoReindeer() {
+  if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
+    Game.seasonPopup.click();
+  }
+}
+
+function autoBuy() {
+  if (FrozenCookies.autoBuy && (Game.cookies >= delayAmount() + recommendation.cost) && (nextChainedPurchase().delta_cps > 0)) {
+    recommendation.time = Date.now() - Game.startDate;
+//  full_history.push(recommendation);  // Probably leaky, maybe laggy?
+    recommendation.purchase.clickFunction = null;
+    disabledPopups = false;
+//  console.log(purchase.name + ': ' + Beautify(recommendation.efficiency) + ',' + Beautify(recommendation.delta_cps));
+    recommendation.purchase.buy();
+    logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
+    disabledPopups = true;
+    FrozenCookies.recalculateCaches = true;
+    FrozenCookies.processing = false;
+    return autoCookie();
+  }
+}
+
+function autoWrinkler() {
+  if (FrozenCookies.autoWrinkler) {
+    var popCount = 0;
+    if (!haveAllHalloween()) {
+      Game.wrinklers.forEach(function(w) {
+        if (w.sucked > 0.5 && w.phase > 0) {
+          w.hp = 0;
+          popCount += 1;
+        }
+      });
+      if (popCount) {
+        logEvent('Wrinkler', 'Popped ' + popCount + ' wrinklers in attempt to gain cookies.');
+      }
+    } else if (Game.wrinklers.reduce(function(sum,w) {return sum + w.sucked * 1.1;}) + Game.cookies >= delayAmount + recommendation.cost) {
+      Game.wrinklers.forEach(function(w) {
+        if (w.phase) {
+          w.hp = 0;
+          popCount += 1;
+        }
+      });
+      if (popCount) {
+        logEvent('Wrinkler', 'Popped ' + popCount + ' wrinklers to make a purchase.');
+      }
+    }
+  }
+}
+
 //adjusted reset when using the bypass
 function resetBypass(){
   //CC checks that are excluded by use of the dialog bypass
@@ -1141,52 +1229,16 @@ function autoCookie() {
     if (FrozenCookies.timeTravelAmount) {
       doTimeTravel();
     }
-    if (FrozenCookies.autoWrinkler) {
-      var popCount = 0;
-      if (!haveAllHalloween()) {
-        Game.wrinklers.forEach(function(w) {
-          if (w.sucked > 0.5 && w.phase > 0) {
-            w.hp = 0;
-            popCount += 1;
-          }
-        });
-        if (popCount) {
-          logEvent('Wrinkler', 'Popped ' + popCount + ' wrinklers in attempt to gain cookies.');
-        }
-      } else if (Game.wrinklers.reduce(function(sum,w) {return sum + w.sucked * 1.1;}) + Game.cookies >= delayAmount + recommendation.cost) {
-        Game.wrinklers.forEach(function(w) {
-          if (w.phase) {
-            w.hp = 0;
-            popCount += 1;
-          }
-        });
-        if (popCount) {
-          logEvent('Wrinkler', 'Popped ' + popCount + ' wrinklers to make a purchase.');
-        }
-      }
-    }
-    
-    if (FrozenCookies.autoBuy && (Game.cookies >= delayAmount() + recommendation.cost) && (nextChainedPurchase().delta_cps > 0)) {
-      recommendation.time = Date.now() - Game.startDate;
-//      full_history.push(recommendation);  // Probably leaky, maybe laggy?
-      recommendation.purchase.clickFunction = null;
-      disabledPopups = false;
-//      console.log(purchase.name + ': ' + Beautify(recommendation.efficiency) + ',' + Beautify(recommendation.delta_cps));
-      recommendation.purchase.buy();
-      logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
-      disabledPopups = true;
-      FrozenCookies.recalculateCaches = true;
-      FrozenCookies.processing = false;
-      return autoCookie();
-    }
+
+    autoWrinkler();
+
+    autoBuy();
     
     // This apparently *has* to stay here, or else fast purchases will multi-click it.
     if (Game.goldenCookie.life && FrozenCookies.autoGC) {
       Game.goldenCookie.click();
     }
-    if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
-      Game.seasonPopup.click();
-    }
+    autoReindeer();
     if (FrozenCookies.autoBlacklistOff) {
       autoBlacklistOff();
     }
