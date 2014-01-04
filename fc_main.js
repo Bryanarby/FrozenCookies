@@ -12,6 +12,7 @@ function setOverrides() {
   // Separate because these are user-input values
   FrozenCookies.cookieClickSpeed = preferenceParse('cookieClickSpeed',0);
   FrozenCookies.frenzyClickSpeed = preferenceParse('frenzyClickSpeed',0);
+  FrozenCookies.HCResetValue = preferenceParse('HCResetValue',500);
   
   // Becomes 0 almost immediately after user input, so default to 0
   FrozenCookies.timeTravelAmount = 0;
@@ -42,6 +43,10 @@ function setOverrides() {
   FrozenCookies.autoclickBot = 0;
   FrozenCookies.autoFrenzyBot = 0;
   FrozenCookies.frenzyClickBot = 0;
+
+  //TODO find the appropriate place for this, or change how it works.
+  //used against log spamming and unneeded checks.
+  FrozenCookies.HCResetReady = false;
   
   // Caching
   
@@ -70,7 +75,8 @@ function setOverrides() {
   // Replace Game.Popup references with event logging
   eval("Game.goldenCookie.click = " + Game.goldenCookie.click.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("GC", $1, true);'));
   eval("Game.UpdateWrinklers = " + Game.UpdateWrinklers.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("Wrinkler", $1, true);'));
-/*
+  eval("Game.seasonPopup.click = " + Game.seasonPopup.click.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("Reindeer", $1, true);'));
+  /*
   eval("Game.Draw = " + Game.Draw.toString()
     .replace(/if \(Game.cookies>=me.price\) l\('product'\+me.id\).className='product enabled'; else l\('product'\+me.id\).className='product disabled';/, '(Game.cookies >= me.price) ? $("#product"+me.id).addClass("enabled").removeClass("disabled") : $("#product"+me.id).addClass("disabled").removeClass("enabled");')
     .replace(/if \(Game.cookies>=me.basePrice\) l\('upgrade'\+i\).className='crate upgrade enabled'; else l\('upgrade'\+i\).className='crate upgrade disabled';/, '(Game.cookies >= me.basePrice) ? $("#upgrade"+me.id).addClass("enabled").removeClass("disabled") : $("#upgrade"+me.id).addClass("disabled").removeClass("enabled");'));
@@ -238,6 +244,7 @@ function updateLocalStorage() {
   
   localStorage.frenzyClickSpeed = FrozenCookies.frenzyClickSpeed;
   localStorage.cookieClickSpeed = FrozenCookies.cookieClickSpeed;
+  localStorage.HCResetValue = FrozenCookies.HCResetValue;
   localStorage.nonFrenzyTime = FrozenCookies.non_gc_time;
   localStorage.frenzyTime = FrozenCookies.gc_time;
   localStorage.lastHCAmount = FrozenCookies.lastHCAmount;
@@ -312,6 +319,24 @@ function updateSpeed(base) {
   var newSpeed = getSpeed(FrozenCookies[base]);
   if (newSpeed != FrozenCookies[base]) {
     FrozenCookies[base] = newSpeed;
+    updateLocalStorage();
+    FCStart();
+  }
+}
+
+//to store without limit.
+function getLimit(current) {
+  var newLimit = prompt('New limit :',current);
+  if (typeof(newLimit) == 'undefined' || newLimit == null || isNaN(Number(newLimit)) || Number(newLimit) < 0) {
+    newLimit = current;
+  }
+  return Number(newLimit);
+}
+
+function updateLimit(base) {
+  var newLimit = getLimit(FrozenCookies[base]);
+  if (newLimit != FrozenCookies[base]) {
+    FrozenCookies[base] = newLimit;
     updateLocalStorage();
     FCStart();
   }
@@ -1009,6 +1034,26 @@ function autoFrenzyClick() {
   }
 }
 
+//adjusted reset when using the bypass
+function resetBypass(){
+  //CC checks that are excluded by use of the dialog bypass
+  if (Game.cookiesEarned>=1000000) Game.Win('Sacrifice');
+  if (Game.cookiesEarned>=1000000000) Game.Win('Oblivion');
+  if (Game.cookiesEarned>=1000000000000) Game.Win('From scratch');
+  if (Game.cookiesEarned>=1000000000000000) Game.Win('Nihilism');
+  
+  //actual reset
+  fcReset(true);
+
+  //more code that's ignored by the bypass..  
+  var prestige=0;
+  if (Game.prestige.ready) prestige=Game.prestige['Heavenly chips'];
+  Game.prestige=[];
+  Game.CalculatePrestige();
+  prestige=Game.prestige['Heavenly chips']-prestige;
+  if (prestige!=0) Game.Popup('You earn '+prestige+' heavenly chip'+(prestige==1?'':'s')+'!');
+}
+
 function autoCookie() {
   if (!FrozenCookies.processing) {
     FrozenCookies.processing = true;
@@ -1030,6 +1075,28 @@ function autoCookie() {
       }
       updateLocalStorage();
     }
+    // prestiege reset    
+    if (FrozenCookies.HCReset) {
+      if (currentHCAmount >= Game.prestige['Heavenly chips']+ FrozenCookies.HCResetValue) {
+        //do the appropriate checks
+        if (!(Game.clickFrenzy > 0) && !(Game.frenzy > 0)) {
+          logEvent('HC', 'HC Reset values reached. Resetting at ' + currentHCAmount + ' Heavenly Chips in ' + timeDisplay((FrozenCookies.lastHCTime - FrozenCookies.prevLastHCTime)/1000));
+          if (FrozenCookies.HCRatio) {
+            var newHCResetValue = Math.round(FrozenCookies.HCResetValue * 0.5 * (currentHCAmount / Game.prestige['Heavenly chips']));
+            FrozenCookies.HCResetValue = newHCResetValue;
+            logEvent('HC', 'HCRatio is set to update. Recalculated new offset to: ' + newHCResetValue);
+          }
+          resetBypass();
+        } else {
+          //HC is there, but not efficient to reset yet
+          if (!FrozenCookies.HCResetReady) {
+            logEvent('HC', 'Ready to reset at ' + currentHCAmount + ' Heavenly Chips. Reached in ' + timeDisplay((FrozenCookies.lastHCTime - FrozenCookies.prevLastHCTime)/1000));
+            FrozenCookies.HCResetReady = true;
+          }
+        }
+      }
+    }
+    
     if (FrozenCookies.lastCPS != Game.cookiesPs) {
       FrozenCookies.recalculateCaches = true;
       FrozenCookies.lastCPS = Game.cookiesPs;
