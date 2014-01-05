@@ -405,7 +405,7 @@ function FCMenu() {
       }
       var averageHCHR = 60 * 60 * (FrozenCookies.lastHCAmount - currHC)/((FrozenCookies.lastHCTime - Game.startDate)/1000);
       subsection.append($('<div />').addClass('listing').html('<b>Average HC Gain/hr:</b> ' + Beautify(averageHCHR));
-      subsection.append($('<div />').addClass('listing').html('<b>Expected time to reset:</b> ' + Beautify(60 * 60 * (resetHCPoint - currHC) / averageHCHR)/1000));
+     // subsection.append($('<div />').addClass('listing').html('<b>Expected time to reset:</b> ' + Beautify(60 * 60 * (resetHCPoint - currHC) / averageHCHR)/1000));
       if (FrozenCookies.lastHCAmount - 1 >= currHC) {
         subsection.append($('<div />').addClass('listing').html('<b>Previous Average HC Gain/hr:</b> ' + Beautify(60 * 60 *(FrozenCookies.lastHCAmount - 1 - currHC)/((FrozenCookies.prevLastHCTime - Game.startDate)/1000))));
       }
