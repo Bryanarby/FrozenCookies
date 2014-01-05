@@ -1137,9 +1137,7 @@ function autoWrinkler() {
 }
 
 function autoGC(){
-  if (Game.goldenCookie.life && FrozenCookies.autoGC) {
-    Game.goldenCookie.click();
-  }
+
 }
 
 //adjusted reset when using the bypass
@@ -1272,8 +1270,10 @@ function autoCookie() {
     autoBuy();
     
     // This apparently *has* to stay here, or else fast purchases will multi-click it.
-    autoGC();
-
+    //autoGC();
+    if (Game.goldenCookie.life && FrozenCookies.autoGC) {
+      Game.goldenCookie.click();
+    }
     autoReindeer();
 
     if (FrozenCookies.autoBlacklistOff) {
