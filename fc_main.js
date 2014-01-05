@@ -1142,6 +1142,27 @@ function autoGC(){
   }
 }
 
+//adjusted reset when using the bypass
+function resetBypass(){
+  //CC checks that are excluded by use of the dialog bypass
+  if (Game.cookiesEarned>=1000000) Game.Win('Sacrifice');
+  if (Game.cookiesEarned>=1000000000) Game.Win('Oblivion');
+  if (Game.cookiesEarned>=1000000000000) Game.Win('From scratch');
+  if (Game.cookiesEarned>=1000000000000000) Game.Win('Nihilism');
+  
+  //actual reset
+  fcReset(true);
+
+  //more code that's ignored by the bypass..  
+  var prestige=0;
+  if (Game.prestige.ready) prestige=Game.prestige['Heavenly chips'];
+  Game.prestige=[];
+  Game.CalculatePrestige();
+  prestige=Game.prestige['Heavenly chips']-prestige;
+  if (prestige!=0) Game.Popup('You earn '+prestige+' heavenly chip'+(prestige==1?'':'s')+'!');
+}
+
+
 function autoHCReset() {
   var currentHCAmount = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
   if (FrozenCookies.autoHCReset) {
