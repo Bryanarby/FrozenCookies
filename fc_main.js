@@ -1136,8 +1136,38 @@ function autoWrinkler() {
   }
 }
 
+function autoGC(){
+  if (Game.goldenCookie.life && FrozenCookies.autoGC) {
+    Game.goldenCookie.click();
+  }
+}
+
+function autoHCReset() {
+  var currentHCAmount = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
+  if (FrozenCookies.autoHCReset) {
+    if (currentHCAmount >= Game.prestige['Heavenly chips']+ FrozenCookies.HCResetValue) {
+    //do the appropriate checks
+      if (!(Game.clickFrenzy > 0) && !(Game.frenzy > 0)) {
+        logEvent('HC', 'HC Reset values reached. Resetting at ' + currentHCAmount + ' Heavenly Chips in ' + timeDisplay((FrozenCookies.lastHCTime - FrozenCookies.prevLastHCTime)/1000));
+        /*if (FrozenCookies.HCRatio) {
+          var newHCResetValue = Math.round(FrozenCookies.HCResetValue * 0.5 * (currentHCAmount / Game.prestige['Heavenly chips']));
+          FrozenCookies.HCResetValue = newHCResetValue;
+          logEvent('HC', 'HCRatio is set to update. Recalculated new offset to: ' + newHCResetValue);
+        }*/
+        resetBypass();
+      } else {
+        //HC is there, but current GC effects make it not efficient to reset yet
+        if (!FrozenCookies.HCResetReady) {
+          logEvent('HC', 'Ready to reset at ' + currentHCAmount + ' Heavenly Chips. Reached in ' + timeDisplay((FrozenCookies.lastHCTime - FrozenCookies.prevLastHCTime)/1000));
+          FrozenCookies.HCResetReady = true;
+        }
+      }
+    }
+  }
+}
+
 //adjusted reset when using the bypass
-function resetBypass(){
+function resetBypass() {
   //CC checks that are excluded by use of the dialog bypass
   if (Game.cookiesEarned>=1000000) Game.Win('Sacrifice');
   if (Game.cookiesEarned>=1000000000) Game.Win('Oblivion');
@@ -1177,27 +1207,8 @@ function autoCookie() {
       }
       updateLocalStorage();
     }
-    // prestiege reset    
-    if (FrozenCookies.HCReset) {
-      if (currentHCAmount >= Game.prestige['Heavenly chips']+ FrozenCookies.HCResetValue) {
-        //do the appropriate checks
-        if (!(Game.clickFrenzy > 0) && !(Game.frenzy > 0)) {
-          logEvent('HC', 'HC Reset values reached. Resetting at ' + currentHCAmount + ' Heavenly Chips in ' + timeDisplay((FrozenCookies.lastHCTime - FrozenCookies.prevLastHCTime)/1000));
-          if (FrozenCookies.HCRatio) {
-            var newHCResetValue = Math.round(FrozenCookies.HCResetValue * 0.5 * (currentHCAmount / Game.prestige['Heavenly chips']));
-            FrozenCookies.HCResetValue = newHCResetValue;
-            logEvent('HC', 'HCRatio is set to update. Recalculated new offset to: ' + newHCResetValue);
-          }
-          resetBypass();
-        } else {
-          //HC is there, but not efficient to reset yet
-          if (!FrozenCookies.HCResetReady) {
-            logEvent('HC', 'Ready to reset at ' + currentHCAmount + ' Heavenly Chips. Reached in ' + timeDisplay((FrozenCookies.lastHCTime - FrozenCookies.prevLastHCTime)/1000));
-            FrozenCookies.HCResetReady = true;
-          }
-        }
-      }
-    }
+    // prestiege reset  
+    autoHCReset();
     
     if (FrozenCookies.lastCPS != Game.cookiesPs) {
       FrozenCookies.recalculateCaches = true;
@@ -1240,10 +1251,10 @@ function autoCookie() {
     autoBuy();
     
     // This apparently *has* to stay here, or else fast purchases will multi-click it.
-    if (Game.goldenCookie.life && FrozenCookies.autoGC) {
-      Game.goldenCookie.click();
-    }
+    autoGC();
+
     autoReindeer();
+
     if (FrozenCookies.autoBlacklistOff) {
       autoBlacklistOff();
     }
