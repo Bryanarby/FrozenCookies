@@ -42,6 +42,7 @@ function setOverrides() {
   FrozenCookies.resetting = false;
   
   FrozenCookies.cookieBot = 0;
+  Frozencookies.loggingBot = 0;
   FrozenCookies.autoclickBot = 0;
   FrozenCookies.autoFrenzyBot = 0;
   FrozenCookies.frenzyClickBot = 0;
@@ -51,6 +52,7 @@ function setOverrides() {
   FrozenCookies.HCResetReady = false;
   FrozenCookies.clickedGC = false;
   FrozenCookies.clickedReindeer = false;
+  FrozenCookies.logWindow = 1;
   
   
   // Caching
@@ -61,6 +63,7 @@ function setOverrides() {
   FrozenCookies.caches.recommendationList = [];
   FrozenCookies.caches.buildings = [];
   FrozenCookies.caches.upgrades = [];
+  FrozenCookies.caches.logs = [];
   
   if (!blacklist[FrozenCookies.blacklist]) {
     FrozenCookies.blacklist = 'none';
@@ -369,6 +372,7 @@ function getFunctionByName(functionName){
     case 'autoBuy': return this.autoBuy; break;
 //    case 'autoClick': return this.autoClick; break;
     case 'autoFrenzy': return this.autoFrenzyClick; break;
+    case 'logging': return this.logging; break;
     case 'autoGC': return this.autoGC; break;
     case 'autoHCReset': return this.autoHCReset; break;
     case 'autoReindeer': return this.autoReindeer; break;
@@ -379,28 +383,24 @@ function getFunctionByName(functionName){
 
 //update the array of functions that need to be called in autoCookie()
 function updateAutoCookies(preferenceName, value) {
-  if ((preferenceName.indexOf("auto") != -1)) {
-    var func = getFunctionByName(preferenceName);
-    var index = FrozenCookies.autoCookies.indexOf(func);
-    //on/off?
-    if (value == 1) {
-      //if not found
-      if (index == -1) {
-      	if (func !== null) {
-	  FrozenCookies.processing = true;
-      	  FrozenCookies.autoCookies.push(getFunctionByName(preferenceName));
-      	  logEvent('AutoManager', 'Turned on ' + preferenceName);
-      	}
-      }
-    } else {
-      if (index > -1) {
+  var func = getFunctionByName(preferenceName);
+  var index = FrozenCookies.autoCookies.indexOf(func);
+  //on/off?
+  if (value == 1) {
+    //if not found
+    if (index == -1) {
+    	if (func !== null) {
         FrozenCookies.processing = true;
-        FrozenCookies.autoCookies.splice(index,1);
-      	logEvent('AutoManager', 'Turned ' + preferenceName + ' off');
-      }
+    	  FrozenCookies.autoCookies.push(getFunctionByName(preferenceName));
+    	  logEvent('AutoManager', 'Turned on ' + preferenceName);
+    	}
     }
   } else {
-    logEvent('AutoManager', 'Invalid input ' + preferenceName + ', ' + value);  
+    if (index > -1) {
+      FrozenCookies.processing = true;
+      FrozenCookies.autoCookies.splice(index,1);
+    	logEvent('AutoManager', 'Turned ' + preferenceName + ' off');
+    }
   }
 }
 
@@ -1075,7 +1075,8 @@ function logEvent(event, text, popup) {
   var time = '[' + timeDisplay((Date.now() - Game.startDate)/1000) + ']';
   var output = time + ' ' + event + ': ' + text;
   if (FrozenCookies.logging) {
-    console.log(output);
+    FrozenCookies.caches.logs.push(output);
+    //console.log(output);
   }
   if (popup) {
     Game.Popup(text);
@@ -1123,6 +1124,30 @@ function autoFrenzyClick() {
         FrozenCookies.autoclickBot = setInterval(function(){Game.ClickCookie();}, 1000 / FrozenCookies.cookieClickSpeed);
       }
     }
+  }
+}
+
+function logging() {
+  if(FrozenCookies.logging) {
+    if(FrozenCookies.caches.logs.length){
+      if(!FrozenCookies.loggingBot){
+        FrozenCookies.loggingBot = setTimeout(logBot, FrozenCookies.frequency*2);
+      }
+    }
+  } else if(FrozenCookies.loggingBot){
+    clearTimeout(FrozenCookies.loggingBot);
+    FrozenCookies.loggingBot = 0;
+  }
+}
+
+function logBot() {
+  for (var x = 0; x < FrozenCookies.logWindow; x++) {
+    console.log(FrozenCookies.caches.logs.shift());
+  }
+  if (FrozenCookies.caches.logs.length + FrozenCookies.logWindow > FrozenCookies.logWindow) {
+    FrozenCookies.loggingBot = setTimeout(logBot, FrozenCookies.frequency*2*(Math.pow(++FrozenCookies.logWindow)));
+  } else if ((FrozenCookies.logwindow > 1) ? --FrozenCookies.logwindow : 1{
+    FrozenCookies.loggingBot = setTimeout(logBot, FrozenCookies.frequency*2*(Math.pow(FrozenCookies.logWindow)));
   }
 }
 
@@ -1430,6 +1455,7 @@ function FCStart() {
     clearInterval(FrozenCookies.autoclickBot);
     FrozenCookies.autoclickBot = 0;
   }
+  
 // Remove until timing issues are fixed
 //  if (FrozenCookies.goldenCookieBot) {
 //    clearInterval(FrozenCookies.goldenCookieBot);
@@ -1445,7 +1471,6 @@ function FCStart() {
 //  if (FrozenCookies.autoGC) {
 //    FrozenCookies.goldenCookieBot = setInterval(autoGoldenCookie, FrozenCookies.frequency);
 //  }
-  
   if (FrozenCookies.autoClick && FrozenCookies.cookieClickSpeed) {
     FrozenCookies.autoclickBot = setInterval(Game.ClickCookie, 1000 / FrozenCookies.cookieClickSpeed);
   }
