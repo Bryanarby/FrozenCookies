@@ -1,9 +1,8 @@
 function setOverrides() {
+  FrozenCookies.autoCookies = [];
   // Set all cycleable preferences
   _.keys(FrozenCookies.preferenceValues).forEach(function(preference) {
     FrozenCookies[preference] = preferenceParse(preference, FrozenCookies.preferenceValues[preference].default);
-    console.log(preference);
-    console.log(FrozenCookies[preference]);
     updateAutoCookies(preference.toString(), FrozenCookies[preference]);
   });
 
@@ -59,7 +58,6 @@ function setOverrides() {
   FrozenCookies.caches.recommendationList = [];
   FrozenCookies.caches.buildings = [];
   FrozenCookies.caches.upgrades = [];
-  FrozenCookies.autoCookies = [];
   
   if (!blacklist[FrozenCookies.blacklist]) {
     FrozenCookies.blacklist = 'none';
@@ -373,10 +371,6 @@ function getFunctionByName(functionName){
 
 //update the array of functions that need to be called in autoCookie()
 function updateAutoCookies(preferenceName, value) {
-  console.log(preferenceName);
-  console.log(value);
-  var name = preferenceName.toString();
-  console.log(name);
   if (name && (name.indexOf("auto") != -1)) {
     var index = FrozenCookies.autoCookies.indexOf(preferenceName);
     //on/off?
