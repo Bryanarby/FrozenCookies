@@ -1289,17 +1289,17 @@ function updateHeuristics() {
 function autoCookie2() {
   //work on caches/recalculate on changes
   do {
-  updateCaches();
-  FrozenCookies.processing = false;
-  
-  //think
-  for (var i = 0; i < FrozenCookies.autoCookies.length; i++) {
-    if (FrozenCookies.processing) {
-      break;
-    }
-    FrozenCookies.autoCookies[i]();
-  }
-  while (FrozenCookies.processing);
+    updateCaches();
+    FrozenCookies.processing = false;
+    
+    //think
+    for (var i = 0; i < FrozenCookies.autoCookies.length; i++) {
+      if (FrozenCookies.processing) {
+        break;
+      }
+      FrozenCookies.autoCookies[i]();
+    } 
+  }while (FrozenCookies.processing);
   //update heuristic data
   updateHeuristics();
   
