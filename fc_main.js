@@ -376,8 +376,8 @@ function updateAutoCookies(preferenceName, value) {
   console.log(preferenceName);
   console.log(value);
   var name = preferenceName.toString();
-  console.log(test);
-  if ((name.indexOf("auto") != -1)) {
+  console.log(name);
+  if (name && (name.indexOf("auto") != -1)) {
     var index = FrozenCookies.autoCookies.indexOf(preferenceName);
     //on/off?
     if (value == 1) {
