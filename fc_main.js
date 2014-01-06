@@ -1296,7 +1296,7 @@ function autoCookie2() {
       if(!FrozenCookies.processing){
         func();
       } else {
-      	return autoCookie2();
+      	break;
       }
     }
   );
@@ -1304,8 +1304,12 @@ function autoCookie2() {
   //update heuristic data
   updateHeuristics();
   
-  FrozenCookies.processing = false;
-  setTimeout(autoCookie2, FrozenCookies.frequency);
+  if(FrozenCookies.processing) {
+    FrozenCookies.processing = false;
+    setTimeout(autoCookie2, 0);	
+  } else {
+    setTimeout(autoCookie2, FrozenCookies.frequency);
+  }
 }
 
 function autoCookie() {
