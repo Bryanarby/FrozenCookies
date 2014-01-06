@@ -1,4 +1,15 @@
 function setOverrides() {
+  // Caching
+  
+  FrozenCookies.recalculateCaches = true;
+  FrozenCookies.caches = {};
+  FrozenCookies.caches.nextPurchase = {};
+  FrozenCookies.caches.recommendationList = [];
+  FrozenCookies.caches.buildings = [];
+  FrozenCookies.caches.upgrades = [];
+  FrozenCookies.caches.logs = [];
+
+
   FrozenCookies.autoCookies = [];
   // Set all cycleable preferences
   _.keys(FrozenCookies.preferenceValues).forEach(function(preference) {
@@ -53,17 +64,6 @@ function setOverrides() {
   FrozenCookies.clickedGC = false;
   FrozenCookies.clickedReindeer = false;
   FrozenCookies.logWindow = 1;
-  
-  
-  // Caching
-  
-  FrozenCookies.recalculateCaches = true;
-  FrozenCookies.caches = {};
-  FrozenCookies.caches.nextPurchase = {};
-  FrozenCookies.caches.recommendationList = [];
-  FrozenCookies.caches.buildings = [];
-  FrozenCookies.caches.upgrades = [];
-  FrozenCookies.caches.logs = [];
   
   if (!blacklist[FrozenCookies.blacklist]) {
     FrozenCookies.blacklist = 'none';
