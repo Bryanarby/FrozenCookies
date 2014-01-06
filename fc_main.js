@@ -375,8 +375,9 @@ function getFunctionByName(functionName){
 function updateAutoCookies(preferenceName, value) {
   console.log(preferenceName);
   console.log(value);
-
-  if ((preferenceName.toString().indexOf("auto") != -1)) {
+  var name = preferenceName.toString();
+  console.log(test);
+  if ((name.indexOf("auto") != -1)) {
     var index = FrozenCookies.autoCookies.indexOf(preferenceName);
     //on/off?
     if (value == 1) {
