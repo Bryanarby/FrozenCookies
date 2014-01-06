@@ -53,7 +53,7 @@ function setOverrides() {
   FrozenCookies.resetting = false;
   
   FrozenCookies.cookieBot = 0;
-  Frozencookies.loggingBot = 0;
+  FrozenCookies.loggingBot = 0;
   FrozenCookies.autoclickBot = 0;
   FrozenCookies.autoFrenzyBot = 0;
   FrozenCookies.frenzyClickBot = 0;
