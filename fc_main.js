@@ -1291,7 +1291,7 @@ function autoCookie2() {
   updateCaches();
   
   //think
-  for (int i = 0; i < FrozenCookies.autoCookies.length; i++) {
+  for (var i = 0; i < FrozenCookies.autoCookies.length; i++) {
     if (FrozenCookies.processing) {
       break;
     }
