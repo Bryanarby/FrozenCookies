@@ -53,7 +53,6 @@ function setOverrides() {
   FrozenCookies.resetting = false;
   
   FrozenCookies.cookieBot = 0;
-  FrozenCookies.loggingBot = 0;
   FrozenCookies.autoclickBot = 0;
   FrozenCookies.autoFrenzyBot = 0;
   FrozenCookies.frenzyClickBot = 0;
@@ -1128,20 +1127,7 @@ function autoFrenzyClick() {
 }
 
 function logging() {
-  if(FrozenCookies.logging) {
-    if(FrozenCookies.caches.logs.length){
-      if(!FrozenCookies.loggingBot){
-        FrozenCookies.loggingBot = setTimeout(logBot, 100);
-      }
-    }
-  } else if(FrozenCookies.loggingBot){
-    clearTimeout(FrozenCookies.loggingBot);
-    FrozenCookies.loggingBot = 0;
-  }
-}
-
-function logBot() {
-  if (FrozenCookies.caches.logs.length) {
+  if(FrozenCookies.caches.logs.length){
     var count = FrozenCookies.caches.logs.length < FrozenCookies.logWindow ? FrozenCookies.caches.logs.length : FrozenCookies.logWindow;
     for (var x = 0; x < count; x++) {
       console.log(FrozenCookies.caches.logs.shift());
@@ -1155,10 +1141,10 @@ function logBot() {
     console.log(output);
     
     FrozenCookies.logWindow += 1;
-    FrozenCookies.loggingBot = setTimeout(logBot, 100*FrozenCookies.logWindow);
-  } else if ((FrozenCookies.logwindow > 1) ? --FrozenCookies.logwindow : 1){
-    FrozenCookies.loggingBot = setTimeout(logBot, 100*(FrozenCookies.logWindow));
+  } else{
+    if(FrozenCookies.logwindow > 1)FrozenCookies.logwindow -= 1;
   }
+ 
 }
 
 function autoReindeer() {
