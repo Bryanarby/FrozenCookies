@@ -39,7 +39,7 @@ function setOverrides() {
   
   // Allow autoCookie to run
   FrozenCookies.processing = false;
-  
+  FrozenCookies.resetting = false;
   
   FrozenCookies.cookieBot = 0;
   FrozenCookies.autoclickBot = 0;
@@ -228,6 +228,7 @@ function timeDisplay(seconds) {
 }
 
 function fcReset(bypass) {
+  FrozenCookies.resetting = true;
   Game.oldReset(bypass);
   FrozenCookies.nonFrenzyTime = 0;
   FrozenCookies.frenzyTime = 0;
@@ -241,6 +242,7 @@ function fcReset(bypass) {
   FrozenCookies.HCResetReady = false;
   updateLocalStorage();
   recommendationList(true);
+  FrozenCookies.resetting = false;
 }
 
 function updateLocalStorage() {
@@ -1228,27 +1230,6 @@ function autoHCReset() {
   }
 }
 
-//adjusted reset when using the bypass
-function resetBypass() {
-  //CC checks that are excluded by use of the dialog bypass
-  if (Game.cookiesEarned>=1000000) Game.Win('Sacrifice');
-  if (Game.cookiesEarned>=1000000000) Game.Win('Oblivion');
-  if (Game.cookiesEarned>=1000000000000) Game.Win('From scratch');
-  if (Game.cookiesEarned>=1000000000000000) Game.Win('Nihilism');
-  
-  //actual reset
-  fcReset(true);
-
-  //more code that's ignored by the bypass..  
-  var prestige=0;
-  if (Game.prestige.ready) prestige=Game.prestige['Heavenly chips'];
-  Game.prestige=[];
-  Game.CalculatePrestige();
-  prestige=Game.prestige['Heavenly chips']-prestige;
-  if (prestige!=0) Game.Popup('You earn '+prestige+' heavenly chip'+(prestige==1?'':'s')+'!');
-}
-
-
 function updateCaches() {
   var recommendation, currentBank, targetBank, currentCookieCPS, currentUpgradeCount;
 	
@@ -1323,22 +1304,23 @@ function updateHeuristics() {
 }
 
 function autoCookie2() {
-  //work on caches/recalculate on changes
-  do {
-    updateCaches();
-    FrozenCookies.processing = false;
-    
-    //think
-    for (var i = 0; i < FrozenCookies.autoCookies.length; i++) {
-      if (FrozenCookies.processing) {
-        break;
-      }
-      FrozenCookies.autoCookies[i]();
-    } 
-  }while (FrozenCookies.processing);
-  //update heuristic data
-  updateHeuristics();
-  
+  if(!FrozenCookies.resetting) {	
+	  //work on caches/recalculate on changes
+	  do {
+	    updateCaches();
+	    FrozenCookies.processing = false;
+	    
+	    //think
+	    for (var i = 0; i < FrozenCookies.autoCookies.length; i++) {
+	      if (FrozenCookies.processing) {
+	        break;
+	      }
+	      FrozenCookies.autoCookies[i]();
+	    } 
+	  }while (FrozenCookies.processing);
+	  //update heuristic data
+	  updateHeuristics();
+  }  
   setTimeout(autoCookie2, FrozenCookies.frequency);
 }
 
