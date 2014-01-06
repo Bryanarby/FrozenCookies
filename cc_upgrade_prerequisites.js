@@ -202,6 +202,7 @@ var blacklist = [
 ];
 
 var halloweenCookies = [134,135,136,137,138,139,140];
+var christmasCookies = [143,144,145,146,147,148,149];
 
 var cookieInfo = {
   'clot':        {'odds':[0,0.10386789477947,0.19565417350258,0.279830557040944],                   isOverlap:false},
