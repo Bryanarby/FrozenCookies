@@ -625,11 +625,11 @@ function maxCookieTime() {
 }
 
 function reindeercPs() {
-  var cps = baseCps();
+  var reindeerValue = reindeerValue();
   var averageReindeerTime = Game.Has('Reindeer baking grounds') ? 4312.659313 / Game.fps : 7012.659313 / Game.fps;
   cps /= averageReindeerTime;
   cps *= (FrozenCookies.autoReindeer) ? 100 : 0;
-  return cps;
+  return reindeerValue;
 }
 
 function seasoncPs(gcValue) {
