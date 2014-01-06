@@ -1146,7 +1146,7 @@ function logBot() {
   }
   if (FrozenCookies.caches.logs.length + FrozenCookies.logWindow > FrozenCookies.logWindow) {
     FrozenCookies.loggingBot = setTimeout(logBot, FrozenCookies.frequency*2*(Math.pow(++FrozenCookies.logWindow)));
-  } else if ((FrozenCookies.logwindow > 1) ? --FrozenCookies.logwindow : 1{
+  } else if ((FrozenCookies.logwindow > 1) ? --FrozenCookies.logwindow : 1){
     FrozenCookies.loggingBot = setTimeout(logBot, FrozenCookies.frequency*2*(Math.pow(FrozenCookies.logWindow)));
   }
 }
