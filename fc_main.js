@@ -1087,6 +1087,7 @@ function autoFrenzyClick() {
 function autoReindeer() {
   if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
     Game.seasonPopup.click();
+    Game.seasonPopup.life = 0;
   }
 }
 
