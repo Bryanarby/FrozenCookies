@@ -1291,11 +1291,13 @@ function autoCookie2() {
   updateCaches();
   
   //think
-  FrozenCookies.autoCookies.forEach(func){
-    if(!FrozenCookies.processing){
-      func();
-    } else {break;}
-  }
+  FrozenCookies.autoCookies.forEach(
+    function(func){
+      if(!FrozenCookies.processing){
+        func();
+      }
+    }
+  );
   
   //update heuristic data
   updateHeuristics();
