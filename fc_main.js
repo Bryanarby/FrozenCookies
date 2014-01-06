@@ -613,7 +613,7 @@ function weightedCookieValue(useCurrent) {
 
 function reindeerValue() {
   var reindeerMod = Game.Has('Ho ho ho-flavored frosting') ? 120 : 60;
-  return (baseCps() * reindeerMod > 25) baseCps() * reindeerMod ? 25;
+  return (baseCps() * reindeerMod > 25) ? baseCps() * reindeerMod : 25;
 }
 function maxLuckyValue() {
   var gcMod = Game.Has('Get lucky') ? 8400 : 1200;
