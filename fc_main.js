@@ -625,10 +625,10 @@ function maxCookieTime() {
 }
 
 function reindeercPs(gcValue) {
-  var averageReindeerTime = Math.MAX_VALUE; //Game.Has('Reindeer baking grounds') ? : ;
+  var averageReindeerTime = Game.Has('Reindeer baking grounds') ? 4312.659313 : 7012.659313;
   gcValue /= averageReindeerTime;
-  gcValue *= (FrozenCookies.autoReindeer) ? 100 : 0;;
-  return 0;
+  gcValue *= (FrozenCookies.autoReindeer) ? 100 : 0;
+  return gcValue;
 }
 
 function seasoncPs(gcValue) {
