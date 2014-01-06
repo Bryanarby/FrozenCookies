@@ -240,6 +240,9 @@ function fcReset(bypass) {
   FrozenCookies.prevLastHCTime = Date.now();
   FrozenCookies.lastCps = 0;
   FrozenCookies.HCResetReady = false;
+  FrozenCookies.clickedGC = false;
+  FrozenCookies.clickedReindeer = false;
+
   updateLocalStorage();
   recommendationList(true);
   FrozenCookies.resetting = false;
