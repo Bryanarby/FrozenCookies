@@ -1303,7 +1303,7 @@ function autoCookie2() {
   updateHeuristics();
   
   FrozenCookies.processing = false;
-  setTimeout(autoCookie, FrozenCookies.frequency);
+  setTimeout(autoCookie2, FrozenCookies.frequency);
 }
 
 function autoCookie() {
