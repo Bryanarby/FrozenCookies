@@ -1132,7 +1132,7 @@ function autoReindeer() {
 	    Game.seasonPopup.click();
 	    FrozenCookies.clickedReindeer = true;
 	  } 
-  } else if (Game.seasonPopup.time < Game.seasonPopup.getMinTime()) {
+  } else if (Game.seasonPopup.time < Game.seasonPopup.getMinTime() && Game.seasonPopup.life == 0) {
 	    FrozenCookies.clickedReindeer = false;
 	}
 }
@@ -1187,7 +1187,7 @@ function autoGC() {
 	    FrozenCookies.clickedGC = true;
 	    Game.goldenCookie.click();
 	  }
-  } else if (Game.goldenCookie.time < Game.goldenCookie.getMinTime()){
+  } else if (Game.goldenCookie.time < Game.goldenCookie.getMinTime() && !Game.goldenCookie.life){
     FrozenCookies.clickedGC = false;
   }
 }
