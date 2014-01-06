@@ -1414,7 +1414,7 @@ function FCStart() {
   // Now create new intervals with their specified frequencies.
   
   if (FrozenCookies.frequency) {
-    FrozenCookies.cookieBot = setTimeout(autoCookie, FrozenCookies.frequency);
+    FrozenCookies.cookieBot = setTimeout(autoCookie2, FrozenCookies.frequency);
   }
   
 //  if (FrozenCookies.autoGC) {
