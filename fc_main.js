@@ -1105,7 +1105,6 @@ function autoBuy() {
     disabledPopups = true;
     FrozenCookies.recalculateCaches = true;
     FrozenCookies.processing = false;
-    return autoCookie();
   }
 }
 
@@ -1136,12 +1135,14 @@ function autoWrinkler() {
   }
 }
 
-function autoGC(){
-
+function autoGC() {
+  if (Game.goldenCookie.life && FrozenCookies.autoGC) {
+    Game.goldenCookie.click();
+  }
 }
 
 //adjusted reset when using the bypass
-function resetBypass(){
+function resetBypass() {
   //CC checks that are excluded by use of the dialog bypass
   if (Game.cookiesEarned>=1000000) Game.Win('Sacrifice');
   if (Game.cookiesEarned>=1000000000) Game.Win('Oblivion');
@@ -1270,10 +1271,8 @@ function autoCookie() {
     autoBuy();
     
     // This apparently *has* to stay here, or else fast purchases will multi-click it.
-    //autoGC();
-    if (Game.goldenCookie.life && FrozenCookies.autoGC) {
-      Game.goldenCookie.click();
-    }
+    autoGC();
+
     autoReindeer();
 
     if (FrozenCookies.autoBlacklistOff) {
@@ -1294,6 +1293,7 @@ function autoCookie() {
     }
     FrozenCookies.processing = false;
   }
+  setTimeout(autoCookie, FrozenCookies.frequency);
 }
 
 function FCStart() {
@@ -1316,7 +1316,7 @@ function FCStart() {
   // Now create new intervals with their specified frequencies.
   
   if (FrozenCookies.frequency) {
-    FrozenCookies.cookieBot = setInterval(autoCookie, FrozenCookies.frequency);
+    FrozenCookies.cookieBot = setTimeout(autoCookie, FrozenCookies.frequency);
   }
   
 //  if (FrozenCookies.autoGC) {
