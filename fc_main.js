@@ -1288,7 +1288,9 @@ function updateHeuristics() {
 
 function autoCookie2() {
   //work on caches/recalculate on changes
+  do {
   updateCaches();
+  FrozenCookies.processing = false;
   
   //think
   for (var i = 0; i < FrozenCookies.autoCookies.length; i++) {
@@ -1297,16 +1299,11 @@ function autoCookie2() {
     }
     FrozenCookies.autoCookies[i]();
   }
-
+  while (FrozenCookies.processing);
   //update heuristic data
   updateHeuristics();
   
-  if(FrozenCookies.processing) {
-    FrozenCookies.processing = false;
-    setTimeout(autoCookie2, 0);	
-  } else {
-    setTimeout(autoCookie2, FrozenCookies.frequency);
-  }
+  setTimeout(autoCookie2, FrozenCookies.frequency);
 }
 
 function autoCookie() {
