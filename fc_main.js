@@ -1109,7 +1109,7 @@ function autoBuy() {
     logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
     disabledPopups = true;
     FrozenCookies.recalculateCaches = true;
-    FrozenCookies.processing = false;
+    FrozenCookies.processing = true;
   }
 }
 
@@ -1295,6 +1295,8 @@ function autoCookie2() {
     function(func){
       if(!FrozenCookies.processing){
         func();
+      } else {
+      	return autoCookie2();
       }
     }
   );
