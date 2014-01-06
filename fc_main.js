@@ -624,11 +624,12 @@ function maxCookieTime() {
   return Game.goldenCookie.maxTime
 }
 
-function reindeercPs(gcValue) {
-  var averageReindeerTime = Game.Has('Reindeer baking grounds') ? 4312.659313 : 7012.659313;
-  gcValue /= averageReindeerTime;
-  gcValue *= (FrozenCookies.autoReindeer) ? 100 : 0;
-  return gcValue;
+function reindeercPs() {
+  var cps = baseCps();
+  var averageReindeerTime = Game.Has('Reindeer baking grounds') ? 4312.659313 / Game.fps : 7012.659313 / Game.fps;
+  cps /= averageReindeerTime;
+  cps *= (FrozenCookies.autoReindeer) ? 100 : 0;
+  return cps;
 }
 
 function seasoncPs(gcValue) {
@@ -745,11 +746,11 @@ function buildingStats(recalculate) {
         return null;
       }
       var baseCpsOrig = baseCps();
-      var cpsOrig = baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
+      var cpsOrig = baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + reindeercPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
       var existingAchievements = Game.AchievementsById.map(function(item,i){return item.won});
       buildingToggle(current);
       var baseCpsNew = baseCps();
-      var cpsNew = baseCpsNew + gcPs(cookieValue(currentBank)) + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
+      var cpsNew = baseCpsNew + gcPs(cookieValue(currentBank)) + reindeercPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
       buildingToggle(current, existingAchievements);
       var deltaCps = cpsNew - cpsOrig;
       var baseDeltaCps = baseCpsNew - baseCpsOrig;
