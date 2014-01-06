@@ -49,6 +49,9 @@ function setOverrides() {
   //TODO find the appropriate place for this, or change how it works.
   //used against log spamming and unneeded checks.
   FrozenCookies.HCResetReady = false;
+  FrozenCookies.clickedGC = false;
+  FrozenCookies.clickedReindeer = false;
+  
   
   // Caching
   
@@ -1119,8 +1122,11 @@ function autoFrenzyClick() {
 }
 
 function autoReindeer() {
-  if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
+  if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer && !FrozenCookies.clickedReindeer) {
     Game.seasonPopup.click();
+    FrozenCookies.clickedReindeer = true;
+  } else {
+    FrozenCookies.clickedReindeer = false;
   }
 }
 
@@ -1169,8 +1175,11 @@ function autoWrinkler() {
 }
 
 function autoGC() {
-  if (Game.goldenCookie.life && FrozenCookies.autoGC) {
+  if (Game.goldenCookie.life && FrozenCookies.autoGC && !FrozenCookies.clickedGC) {
+    FrozenCookies.clickedGC = true;
     Game.goldenCookie.click();
+  } else {
+    FrozenCookies.clickedGC = false;
   }
 }
 
