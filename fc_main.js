@@ -1141,8 +1141,10 @@ function logging() {
 }
 
 function logBot() {
-  for (var x = 0; x < FrozenCookies.logWindow; x++) {
-    console.log(FrozenCookies.caches.logs.shift());
+  if (FrozenCookies.caches.logs.length) {
+    for (var x = 0; x < FrozenCookies.logWindow; x++) {
+      console.log(FrozenCookies.caches.logs.shift());
+    }
   }
   if (FrozenCookies.caches.logs.length + FrozenCookies.logWindow > FrozenCookies.logWindow) {
     FrozenCookies.loggingBot = setTimeout(logBot, FrozenCookies.frequency*2*(Math.pow(++FrozenCookies.logWindow)));
