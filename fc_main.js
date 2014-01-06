@@ -1148,7 +1148,11 @@ function logBot() {
     }
   }
   if (FrozenCookies.caches.logs.length + FrozenCookies.logWindow > FrozenCookies.logWindow) {
-    logEvent('logging', 'Loggingwindow size: ' + FrozenCookies.logWindow + ' Flooded. Timeout: ' + FrozenCookies.logWindow/10);
+    
+    var time = '[' + timeDisplay((Date.now() - Game.startDate)/1000) + ']';
+    var text = 'Loggingwindow size: ' + FrozenCookies.logWindow + ' Flooded. Timeout: ' + FrozenCookies.logWindow/10;
+    var output = time + ' logging: ' + text;
+    console.log(output);
     
     FrozenCookies.logWindow += 1;
     FrozenCookies.loggingBot = setTimeout(logBot, 100*FrozenCookies.logWindow);
