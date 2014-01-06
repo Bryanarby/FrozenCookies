@@ -611,6 +611,10 @@ function weightedCookieValue(useCurrent) {
   return Game.elderWrath / 3.0 * base_wrath + (3 - Game.elderWrath) / 3.0 * base_golden;
 }
 
+function reindeerValue() {
+  var reindeerMod = Game.Has('Ho ho ho-flavored frosting') ? 120 : 60;
+  return (baseCps() * reindeerMod > 25) baseCps() * reindeerMod ? 25;
+}
 function maxLuckyValue() {
   var gcMod = Game.Has('Get lucky') ? 8400 : 1200;
   return baseCps() * gcMod;
@@ -619,6 +623,28 @@ function maxLuckyValue() {
 function maxCookieTime() {
   return Game.goldenCookie.maxTime
 }
+
+function reindeercPs(gcValue) {
+  var averageReindeerTime = Math.MAX_VALUE; //Game.Has('Reindeer baking grounds') ? : ;
+  gcValue /= averageReindeerTime;
+  gcValue *= (FrozenCookies.autoReindeer) ? 100 : 0;;
+  return 0;
+}
+
+function seasoncPs(gcValue) {
+  switch (Game.season) {
+    case 'christmas': return reindeercPs(gcValue);
+  }
+  return 0;
+}
+
+/*
+function seasonEfficiency(gcValue) {
+  switch (Game.season) {
+    case 'christmas': return reindeerEfficiency(gcValue);
+    case default: Number.MAX_VALUE;
+  } 
+}*/
 
 function gcPs(gcValue) {
   var averageGCTime = probabilitySpan('golden', 0, 0.5) / Game.fps;
@@ -1092,7 +1118,6 @@ function autoFrenzyClick() {
 function autoReindeer() {
   if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
     Game.seasonPopup.click();
-    Game.seasonPopup.life = 0;
   }
 }
 
@@ -1143,7 +1168,6 @@ function autoWrinkler() {
 function autoGC() {
   if (Game.goldenCookie.life && FrozenCookies.autoGC) {
     Game.goldenCookie.click();
-    Game.goldenCookie.life = 0;
   }
 }
 
