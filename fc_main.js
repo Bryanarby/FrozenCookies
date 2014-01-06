@@ -1124,12 +1124,14 @@ function autoFrenzyClick() {
 }
 
 function autoReindeer() {
-  if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer && !FrozenCookies.clickedReindeer) {
-    Game.seasonPopup.click();
-    FrozenCookies.clickedReindeer = true;
-  } else {
-    FrozenCookies.clickedReindeer = false;
-  }
+  if(!FrozenCookies.clickedReindeer) {
+	  if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
+	    Game.seasonPopup.click();
+	    FrozenCookies.clickedReindeer = true;
+	  } 
+  } else (Game.seasonPopup.time < Game.seasonPopup.getMinTime()) {
+	    FrozenCookies.clickedReindeer = false;
+	}
 }
 
 function autoBuy() {
@@ -1177,10 +1179,12 @@ function autoWrinkler() {
 }
 
 function autoGC() {
-  if (Game.goldenCookie.life && FrozenCookies.autoGC && !FrozenCookies.clickedGC) {
-    FrozenCookies.clickedGC = true;
-    Game.goldenCookie.click();
-  } else {
+  if (!FrozenCookies.clickedGC) {
+	  if (Game.goldenCookie.life && FrozenCookies.autoGC && !FrozenCookies.clickedGC) {
+	    FrozenCookies.clickedGC = true;
+	    Game.goldenCookie.click();
+	  }
+  } else if (Game.goldenCookie.time < Game.goldenCookie.getMinTime()){
     FrozenCookies.clickedGC = false;
   }
 }
