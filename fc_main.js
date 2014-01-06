@@ -1136,7 +1136,7 @@ function logging() {
   if (FrozenCookies.caches.logs.length + FrozenCookies.logWindow > FrozenCookies.logWindow) {
     
     var time = '[' + timeDisplay((Date.now() - Game.startDate)/1000) + ']';
-    var text = 'Loggingwindow size: ' + FrozenCookies.logWindow + ' Flooded. Timeout: ' + FrozenCookies.logWindow/10;
+    var text = 'Loggingwindow size: ' + FrozenCookies.logWindow + ' Flooded.';
     var output = time + ' logging: ' + text;
     console.log(output);
     
