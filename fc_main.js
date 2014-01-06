@@ -1142,7 +1142,8 @@ function logging() {
 
 function logBot() {
   if (FrozenCookies.caches.logs.length) {
-    for (var x = 0; x < FrozenCookies.logWindow; x++) {
+    var count = FrozenCookies.logs.length < FrozenCookies.logWindow ? FrozenCookies.logs.length : FrozenCookies.logWindow;
+    for (var x = 0; x < count; x++) {
       console.log(FrozenCookies.caches.logs.shift());
     }
   }
