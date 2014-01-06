@@ -4,7 +4,7 @@ function setOverrides() {
     FrozenCookies[preference] = preferenceParse(preference, FrozenCookies.preferenceValues[preference].default);
     console.log(preference);
     console.log(FrozenCookies[preference]);
-    updateAutoCookies(preference, FrozenCookies[preference]);
+    updateAutoCookies(preference.toString(), FrozenCookies[preference]);
   });
 
   logEvent("Load", "Initial Load of Frozen Cookies v " + FrozenCookies.branch + "." + FrozenCookies.version + ". (You should only ever see this once.)");
