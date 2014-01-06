@@ -1131,7 +1131,7 @@ function logging() {
   if(FrozenCookies.logging) {
     if(FrozenCookies.caches.logs.length){
       if(!FrozenCookies.loggingBot){
-        FrozenCookies.loggingBot = setTimeout(logBot, FrozenCookies.frequency*2);
+        FrozenCookies.loggingBot = setTimeout(logBot, 1000);
       }
     }
   } else if(FrozenCookies.loggingBot){
@@ -1148,9 +1148,9 @@ function logBot() {
     }
   }
   if (FrozenCookies.caches.logs.length + FrozenCookies.logWindow > FrozenCookies.logWindow) {
-    FrozenCookies.loggingBot = setTimeout(logBot, FrozenCookies.frequency*2*(Math.pow(++FrozenCookies.logWindow)));
+    FrozenCookies.loggingBot = setTimeout(logBot, 1000*(Math.pow(++FrozenCookies.logWindow)));
   } else if ((FrozenCookies.logwindow > 1) ? --FrozenCookies.logwindow : 1){
-    FrozenCookies.loggingBot = setTimeout(logBot, FrozenCookies.frequency*2*(Math.pow(FrozenCookies.logWindow)));
+    FrozenCookies.loggingBot = setTimeout(logBot, 1000*(Math.pow(FrozenCookies.logWindow)));
   }
 }
 
