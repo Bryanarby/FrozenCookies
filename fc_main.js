@@ -1142,7 +1142,7 @@ function logging() {
     
     FrozenCookies.logWindow += 1;
   } else{
-    if(FrozenCookies.logwindow > 1)FrozenCookies.logwindow -= 1;
+    if(FrozenCookies.logWindow > 1)FrozenCookies.logwindow -= 1;
   }
  
 }
