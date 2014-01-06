@@ -2,9 +2,7 @@ function setOverrides() {
   // Set all cycleable preferences
   _.keys(FrozenCookies.preferenceValues).forEach(function(preference) {
     FrozenCookies[preference] = preferenceParse(preference, FrozenCookies.preferenceValues[preference].default);
-    console.log(preference);
-    console.log(FrozenCookies[preference]);
-    //updateAutoCookies(preference, FrozenCookies[preference]);
+    updateAutoCookies(preference, FrozenCookies[preference]);
   });
 
   logEvent("Load", "Initial Load of Frozen Cookies v " + FrozenCookies.branch + "." + FrozenCookies.version + ". (You should only ever see this once.)");
@@ -1139,6 +1137,7 @@ function autoWrinkler() {
 function autoGC() {
   if (Game.goldenCookie.life && FrozenCookies.autoGC) {
     Game.goldenCookie.click();
+    Game.goldenCookie.life = 0;
   }
 }
 
