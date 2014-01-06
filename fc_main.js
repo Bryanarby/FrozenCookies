@@ -3,7 +3,7 @@ function setOverrides() {
   // Set all cycleable preferences
   _.keys(FrozenCookies.preferenceValues).forEach(function(preference) {
     FrozenCookies[preference] = preferenceParse(preference, FrozenCookies.preferenceValues[preference].default);
-    updateAutoCookies(preference.toString(), FrozenCookies[preference]);
+    updateAutoCookies(preference, FrozenCookies[preference]);
   });
 
   logEvent("Load", "Initial Load of Frozen Cookies v " + FrozenCookies.branch + "." + FrozenCookies.version + ". (You should only ever see this once.)");
@@ -389,6 +389,8 @@ function updateAutoCookies(preferenceName, value) {
       	logEvent('AutoManager', 'Turned ' + preferenceName + ' off');
       }
     }
+  } else {
+    logEvent('AutoManager', 'Invalid input ' + preferenceName + ', ' + value);  
   }
 }
 
