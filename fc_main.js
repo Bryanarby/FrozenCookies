@@ -1148,9 +1148,11 @@ function logBot() {
     }
   }
   if (FrozenCookies.caches.logs.length + FrozenCookies.logWindow > FrozenCookies.logWindow) {
-    FrozenCookies.loggingBot = setTimeout(logBot, 1000*(Math.pow(++FrozenCookies.logWindow)));
+    logEvent('logging', 'Loggingwindow size: ' + FrozenCookies.logWindow + ' Flooded. Timeout: ' + Math.pow(FrozenCookies.logWindow+1, 2));
+    
+    FrozenCookies.loggingBot = setTimeout(logBot, 1000*(Math.pow(++FrozenCookies.logWindow, 2)));
   } else if ((FrozenCookies.logwindow > 1) ? --FrozenCookies.logwindow : 1){
-    FrozenCookies.loggingBot = setTimeout(logBot, 1000*(Math.pow(FrozenCookies.logWindow)));
+    FrozenCookies.loggingBot = setTimeout(logBot, 1000*(Math.pow(FrozenCookies.logWindow, 2)));
   }
 }
 
