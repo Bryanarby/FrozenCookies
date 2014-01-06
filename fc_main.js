@@ -371,7 +371,7 @@ function getFunctionByName(functionName){
 
 //update the array of functions that need to be called in autoCookie()
 function updateAutoCookies(preferenceName, value) {
-  if (name && (name.indexOf("auto") != -1)) {
+  if ((preferenceName.indexOf("auto") != -1)) {
     var index = FrozenCookies.autoCookies.indexOf(preferenceName);
     //on/off?
     if (value == 1) {
