@@ -375,12 +375,12 @@ function updateAutoCookies(preferenceName, value) {
   console.log(value);
   
   if ((preferenceName.indexOf("auto") != -1)) {
-    var index = FrozenCookies.autoCookies.indexOf(preferenceName);
+    var func = getFunctionByName(preferenceName);
+    var index = FrozenCookies.autoCookies.indexOf(func);
     //on/off?
     if (value == 1) {
       //if not found
       if (index == -1) {
-      	var func = getFunctionByName(preferenceName);
       	if (func !== null) {
       	  FrozenCookies.autoCookies.push(getFunctionByName(preferenceName));
       	  logEvent('AutoManager', 'Turned on ' + preferenceName);
