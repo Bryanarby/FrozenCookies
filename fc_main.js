@@ -1150,9 +1150,10 @@ function logBot() {
   if (FrozenCookies.caches.logs.length + FrozenCookies.logWindow > FrozenCookies.logWindow) {
     logEvent('logging', 'Loggingwindow size: ' + FrozenCookies.logWindow + ' Flooded. Timeout: ' + FrozenCookies.logWindow/10);
     
-    FrozenCookies.loggingBot = setTimeout(logBot, 100*(++FrozenCookies.logWindow)));
+    FrozenCookies.logWindow += 1;
+    FrozenCookies.loggingBot = setTimeout(logBot, 100*FrozenCookies.logWindow);
   } else if ((FrozenCookies.logwindow > 1) ? --FrozenCookies.logwindow : 1){
-    FrozenCookies.loggingBot = setTimeout(logBot, 1000*(FrozenCookies.logWindow));
+    FrozenCookies.loggingBot = setTimeout(logBot, 100*(FrozenCookies.logWindow));
   }
 }
 
