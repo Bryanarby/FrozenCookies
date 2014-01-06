@@ -1129,7 +1129,7 @@ function autoReindeer() {
 	    Game.seasonPopup.click();
 	    FrozenCookies.clickedReindeer = true;
 	  } 
-  } else (Game.seasonPopup.time < Game.seasonPopup.getMinTime()) {
+  } else if (Game.seasonPopup.time < Game.seasonPopup.getMinTime()) {
 	    FrozenCookies.clickedReindeer = false;
 	}
 }
