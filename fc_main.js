@@ -908,7 +908,7 @@ function calcUpgrade(current, ignoreToggle) {
     var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
     var existingWrath = Game.elderWrath;
     if(!ignoreToggle) { var reverseFunctions = upgradeToggle(current);}
-    }var baseCpsNew = baseCps();
+    var baseCpsNew = baseCps();
     var cpsNew = baseCpsNew + gcPs(cookieValue(currentBank)) + seasoncPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
     if(!ignoreToggle) {upgradeToggle(current, existingAchievements, reverseFunctions);}
     Game.elderWrath = existingWrath;
