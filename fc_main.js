@@ -186,7 +186,7 @@ var numberFormatters = [
 function fcBeautify (value, floats) {
   var negative = (value < 0);
   value = Math.abs(value);
-  if(!floats){
+  if(floats !== null){
     value=Math.floor(value);  
   }
   var formatter = numberFormatters[FrozenCookies.numberDisplay];
