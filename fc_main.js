@@ -710,7 +710,7 @@ function checkCostCompensation(completeList, recalculate){
   var efficiency = purchase.efficiency;
   if(purchase.type != 'santa') {
     for(var x = 1; x < costReductionList.length;x++){
-      var existingAchievements = Game.AchievementsById.map(function(item){return item.won};);
+      var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
       var reverseFunctions = upgradeToggle(costReductionList[0]);
       switch (purchase.type) {
         case 'building': calcBuilding(upgrade); break;
