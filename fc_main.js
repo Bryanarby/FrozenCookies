@@ -730,8 +730,8 @@ function checkCostCompensation(completeList, recalculate){
     if(!counter){
       //find the upgrade, give it a fixed efficiency. code will figure out later which comes on top after buying that one.
       for(x in completeList){
-        if(comepleteList[x].upgrade === winner){
-          comepleteList[x].efficiency = 0;
+        if(completeList[x].upgrade === winner){
+          completeList[x].efficiency = 0;
         }
       }
       completeList[0].efficiency = efficiency;
