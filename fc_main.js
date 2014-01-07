@@ -62,7 +62,7 @@ function setOverrides() {
   FrozenCookies.HCResetReady = false;
   FrozenCookies.clickedGC = false;
   FrozenCookies.clickedReindeer = false;
-  FrozenCookies.logWindow = 1;
+  FrozenCookies.logWindow = 2;
   
   if (!blacklist[FrozenCookies.blacklist]) {
     FrozenCookies.blacklist = 'none';
@@ -1141,12 +1141,12 @@ function logging() {
     
     var time = '[' + timeDisplay((Date.now() - Game.startDate)/1000) + ']';
     var text = 'Loggingwindow size: ' + FrozenCookies.logWindow + ' Flooded.';
-    var output = time + ' logging: ' + text;
+    var output = time + ' Logging: ' + text;
     console.log(output);
     
     FrozenCookies.logWindow += 1;
   } else{
-    if(FrozenCookies.logWindow > 1)FrozenCookies.logWindow -= 1;
+    if(FrozenCookies.logWindow > 2)FrozenCookies.logWindow -= 1;
   }
  
 }
