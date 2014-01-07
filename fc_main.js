@@ -188,7 +188,7 @@ function fcBeautify (value, floats) {
   value = Math.abs(value);
   if(floats > 0){
     value=Math.floor(value);  
-    value=Math.round(floater*10000000)/10000000;//get rid of weird rounding errors
+    value=Math.round(value*10000000)/10000000;//get rid of weird rounding errors
   }
   var formatter = numberFormatters[FrozenCookies.numberDisplay];
   var output = formatter(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
