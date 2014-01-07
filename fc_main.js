@@ -711,13 +711,8 @@ function checkCostCompensation(completeList, recalculate){
   if(purchase.type != 'santa') {
     for(var x = 1; x < costReductionList.length;x++){
       var upgrade = costReductionList[x][0];
-      console.log('testing special upgrades');
-      console.log(completeList[0]);
-      console.log(upgrade);
-      console.log(costReductionList[x][0]);
-	  var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
-      var reverseFunctions = upgradeToggle(upgrade);
-      Game
+      var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
+      var reverseFunctions = upgradeToggle(Game.UpgradesById[upgrade.id]);
       switch (purchase.type) {
         case 'building': calcBuilding(purchase.purchase); break;
         case 'upgrade': calcUpgrade(purchase.purchase, 1); break;
@@ -727,8 +722,7 @@ function checkCostCompensation(completeList, recalculate){
         winner = costReductionList[0];
         counter = x;
       }
-      upgradeToggle(purchase, existingAchievements, reverseFunctions);
-      console.log(upgrade);
+      upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
       switch (purchase.type) {
         case 'building': calcBuilding(purchase.purchase); break;
         case 'upgrade': calcUpgrade(purchase.purchase, 1); break;
