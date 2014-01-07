@@ -805,7 +805,7 @@ function getCostReductionArray(type, recalculate) {
     //buildings
     for (x in buildingRedux) {
       var upgrade = buildingRedux[x];
-      if(!upgrade[0].bought){
+      if(!upgrade.bought){
         FrozenCookies.caches.costReduction[0].push([upgrade]);
       }
     }
@@ -813,7 +813,7 @@ function getCostReductionArray(type, recalculate) {
     //upgrades
     for (x in upgradeRedux) {
       var upgrade = upgradeRedux[x];
-      if(!upgrade[0].bought){
+      if(!upgrade.bought){
         FrozenCookies.caches.costReduction[1].push([upgrade]);
       }
     }
@@ -833,7 +833,7 @@ function getCostReductionArray(type, recalculate) {
         }
       }
     }
-    FrozenCookies.caches.costReduction[0].unshift([]);
+    FrozenCookies.caches.costReduction[0].unshift();
 
     for(x in upgradeRedux) {
       var upgrade = upgradeRedux[x];
@@ -847,7 +847,7 @@ function getCostReductionArray(type, recalculate) {
         }
       }
     }
-    FrozenCookies.caches.costReduction[1].unshift([]);
+    FrozenCookies.caches.costReduction[1].unshift();
     */
   }
   switch (type) {
