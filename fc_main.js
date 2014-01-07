@@ -710,7 +710,7 @@ function checkCostCompensation(completeList, recalculate){
   if(purchase.type != 'santa') {
     for(var x = 1; x < costReductionList.length;x++){
       var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
-      var reverseFunctions = upgradeToggle(costReductionList[0]);
+      var reverseFunctions = upgradeToggle(costReductionList[x]);
       switch (purchase.type) {
         case 'building': calcBuilding(upgrade); break;
         case 'upgrade': calcUpgrade(upgrade); break;
