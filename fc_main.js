@@ -711,14 +711,16 @@ function checkCostCompensation(completeList, recalculate){
   if(purchase.type != 'santa') {
     for(var x = 1; x < costReductionList.length;x++){
       var upgrade = costReductionList[x][0];
+      console.log('testing special upgrades');
       console.log(completeList[0]);
       console.log(upgrade);
+      console.log(costReductionList[x][0]);
 	  var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
       var reverseFunctions = upgradeToggle(upgrade);
       Game
       switch (purchase.type) {
         case 'building': calcBuilding(purchase.purchase); break;
-        case 'upgrade': calcUpgrade(purchase.purchase); break;
+        case 'upgrade': calcUpgrade(purchase.purchase, 1); break;
       }
       
       if (purchase.efficiency <= efficiency) {
@@ -729,7 +731,7 @@ function checkCostCompensation(completeList, recalculate){
       console.log(upgrade);
       switch (purchase.type) {
         case 'building': calcBuilding(purchase.purchase); break;
-        case 'upgrade': calcUpgrade(purchase.purchase); break;
+        case 'upgrade': calcUpgrade(purchase.purchase, 1); break;
       }
     }
     if(!counter){
@@ -752,7 +754,9 @@ function recommendationList(recalculate) {
     var santaRecList = santaStats();
     var completeList = upgradeRecList.concat(buildingRecList).concat(santaRecList).sort(function(a,b){return (a.efficiency - b.efficiency)});
    //bug: it buys upgrades that are illegal.
-    //completeList = checkCostCompensation(completeList, recalculate).sort(function(a,b){return (a.efficiency - b.efficiency)});
+   //double toggle issue
+   //skip self in list
+    completeList = checkCostCompensation(completeList, recalculate).sort(function(a,b){return (a.efficiency - b.efficiency)});
     FrozenCookies.caches.recommendationList = addScores(upgradeRecList.concat(buildingRecList).concat(santaRecList).sort(function(a,b){return (a.efficiency - b.efficiency)}));
   }
   return FrozenCookies.caches.recommendationList;
@@ -890,7 +894,7 @@ function buildingStats(recalculate) {
   return FrozenCookies.caches.buildings;
 }
 
-function calcUpgrade(current) {
+function calcUpgrade(current, ignoreToggle) {
   var upgradeBlacklist = blacklist[FrozenCookies.blacklist].upgrades;
   var currentBank = bestBank(0).cost;
 
@@ -903,10 +907,10 @@ function calcUpgrade(current) {
     var cpsOrig = baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + seasoncPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
     var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
     var existingWrath = Game.elderWrath;
-    var reverseFunctions = upgradeToggle(current);
-    var baseCpsNew = baseCps();
+    if(!ignoreToggle) var reverseFunctions = upgradeToggle(current);
+    }var baseCpsNew = baseCps();
     var cpsNew = baseCpsNew + gcPs(cookieValue(currentBank)) + seasoncPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
-    upgradeToggle(current, existingAchievements, reverseFunctions);
+    if(!ignoreToggle) upgradeToggle(current, existingAchievements, reverseFunctions);
     Game.elderWrath = existingWrath;
     var deltaCps = cpsNew - cpsOrig;
     var baseDeltaCps = baseCpsNew - baseCpsOrig;
