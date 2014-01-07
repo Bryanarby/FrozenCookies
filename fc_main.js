@@ -702,11 +702,34 @@ function purchaseEfficiency(price, deltaCps, baseDeltaCps, currentCps) {
   return efficiency;
 }
 
+function checkCostCompensation(completeList, recalculate){
+  purchase = completeList[0];
+  var costReductionList = getCostReductionArray(purchase.type, recalculate);
+  var counter = 0;
+  var efficiency = purchase.efficiency;
+
+  for(var x = 1; x < costReductionList.length;x++){
+    var price = purchase.cost * costReductionList[x][1];// + find ugpradecost in completeList; 
+    var deltaCps = purchase.delta_cps; //+ deltaCps of the upgrade
+    var baseDeltaCps = purchase.base_delta_cps; //+ base deltaCps of upgade.
+    var currentCps = baseCps();
+    if (purchaseEfficiency(price,deltaCps, baseDeltaCps, currentCps) <= efficiency){
+      counter = x;
+      efficiency = purchaseEfficiency(price,deltaCps, baseDeltaCps, currentCps);
+    }
+  }
+  
+  return completeList;
+}
+
 function recommendationList(recalculate) {
   if (recalculate) {
     var upgradeRecList = upgradeStats(recalculate);
     var buildingRecList = buildingStats(recalculate);
-    var santaRecList = santaStats();    
+    var santaRecList = santaStats();
+    var completeList = upgradeRecList.concat(buildingRecList).concat(santaRecList).sort(function(a,b){return (a.efficiency - b.efficiency)});
+
+    completeList = checkCostCompensation(completeList, recalculate).sort(function(a,b){return (a.efficiency - b.efficiency)});
     FrozenCookies.caches.recommendationList = addScores(upgradeRecList.concat(buildingRecList).concat(santaRecList).sort(function(a,b){return (a.efficiency - b.efficiency)}));
   }
   return FrozenCookies.caches.recommendationList;
@@ -756,21 +779,30 @@ function nextChainedPurchase() {
 function getCostReductionArray(type, recalculate) {
   if (recalculate) {
     //todo make dynamic
-    var buildingRedux = [Game.UpgradesById[160], Game.UpgradesById[168]];
-    var upgradeRedux = [Game.UpgradesById[161], Game.UpgradesById[168]];
-    
-    FrozenCookies.caches.costReduction = [];
-    FrozenCookies.caches.costReduction[0] = [];
-    FrozenCookies.caches.costReduction[1] = [];
+    var buildingRedux = [[Game.UpgradesById[160], 0.99], [Game.UpgradesById[168], 0.99]];
+    var upgradeRedux = [[Game.UpgradesById[161], 0.95], [Game.UpgradesById[168], 0.98]];
 
+    FrozenCookies.caches.costReduction = [];
+    FrozenCookies.caches.costReduction[0] = [null];
+    FrozenCookies.caches.costReduction[1] = [null];
     //buildings
     for (x in buildingRedux) {
       var upgrade = buildingRedux[x];
-      if(!upgrade.bought){
+      if(!upgrade[0].bought){
         FrozenCookies.caches.costReduction[0].push([upgrade]);
       }
     }
     
+    //upgrades
+    for (x in upgradeRedux) {
+      var upgrade = upgradeRedux[x];
+      if(!upgrade[0].bought){
+        FrozenCookies.caches.costReduction[1].push([upgrade]);
+      }
+    }
+    
+    /*
+
     
     for(x in buildingRedux) {
       var upgrade = buildingRedux[x];
@@ -785,14 +817,7 @@ function getCostReductionArray(type, recalculate) {
       }
     }
     FrozenCookies.caches.costReduction[0].unshift([]);
-    //upgrades
-    for (x in upgradeRedux) {
-      var upgrade = upgradeRedux[x];
-      if(!upgrade.bought){
-        FrozenCookies.caches.costReduction[1].push([upgrade]);
-      }
-    }
-    
+
     for(x in upgradeRedux) {
       var upgrade = upgradeRedux[x];
       if(!upgrade.bought){
@@ -805,8 +830,8 @@ function getCostReductionArray(type, recalculate) {
         }
       }
     }
-    FrozenCookies.caches.costReduction[0].unshift([]);
-  }
+    FrozenCookies.caches.costReduction[1].unshift([]);
+  }*/
   switch (type) {
     case 'building': return FrozenCookies.caches.costReduction[0];
     case 'upgrade': return FrozenCookies.caches.costReduction[1];
@@ -839,8 +864,6 @@ function buildingStats(recalculate) {
 
 function upgradeStats(recalculate) {
   if (recalculate) {
-    var upgradeCostRedux = getCostReductionArray('upgrade', recalculate);
-    console.log(upgradeCostRedux);
     var upgradeBlacklist = blacklist[FrozenCookies.blacklist].upgrades;
     var currentBank = bestBank(0).cost;
     FrozenCookies.caches.upgrades = Game.UpgradesById.map(function (current) {
@@ -860,7 +883,7 @@ function upgradeStats(recalculate) {
         Game.elderWrath = existingWrath;
         var deltaCps = cpsNew - cpsOrig;
         var baseDeltaCps = baseCpsNew - baseCpsOrig;
-        var cost = upgradePrereqCost(current, upgradeCostRedux);
+        var cost = upgradePrereqCost(current);
         var efficiency = purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig)
         return {'id' : current.id, 'efficiency' : efficiency, 'base_delta_cps' : baseDeltaCps, 'delta_cps' : deltaCps, 'cost' : cost, 'purchase' : current, 'type' : 'upgrade'};
       }
@@ -923,7 +946,7 @@ function cumulativeSantaCost(amount) {
   return total;
 }
 
-function upgradePrereqCost(upgrade, redux, full) {
+function upgradePrereqCost(upgrade, full) {
   var cost = upgrade.getPrice();
   if (upgrade.unlocked) {
     return cost;
@@ -942,7 +965,7 @@ function upgradePrereqCost(upgrade, redux, full) {
     cost += prereqs.upgrades.reduce(function(sum,item) {
       var reqUpgrade = Game.UpgradesById[item];
       if (!upgrade.bought || full) {
-        sum += upgradePrereqCost(reqUpgrade, redux, full);
+        sum += upgradePrereqCost(reqUpgrade, full);
       }
       return sum;
     }, 0);
