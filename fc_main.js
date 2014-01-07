@@ -183,9 +183,12 @@ var numberFormatters = [
   scientificNotation
 ];
 
-function fcBeautify (value) {
+function fcBeautify (value, floats) {
   var negative = (value < 0);
   value = Math.abs(value);
+  if(!floats){
+    value=Math.floor(value);  
+  }
   var formatter = numberFormatters[FrozenCookies.numberDisplay];
   var output = formatter(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return negative ? '-' + output : output;
