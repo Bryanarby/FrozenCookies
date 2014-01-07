@@ -796,8 +796,8 @@ function nextChainedPurchase() {
 function getCostReductionArray(type, recalculate) {
   if (recalculate) {
     //todo make dynamic
-    var buildingRedux = [Game.UpgradesById[160]], Game.UpgradesById[168]];
-    var upgradeRedux = [Game.UpgradesById[161]], Game.UpgradesById[168]];
+    var buildingRedux = [Game.UpgradesById[160], Game.UpgradesById[168]];
+    var upgradeRedux = [Game.UpgradesById[161], Game.UpgradesById[168]];
 
     FrozenCookies.caches.costReduction = [];
     FrozenCookies.caches.costReduction[0] = [null];
