@@ -710,11 +710,11 @@ function checkCostCompensation(completeList, recalculate){
   var efficiency = purchase.efficiency;
   if(purchase.type != 'santa') {
     for(var x = 1; x < costReductionList.length;x++){
-      var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
+      var existingAchievements = Game.AchievementsById.map(function(item){return item.won};);
       var reverseFunctions = upgradeToggle(costReductionList[0]);
       switch (purchase.type) {
-        case 'building': calcBuilding(upgrade);
-        case 'upgrade': calcUpgrade(upgrade);
+        case 'building': calcBuilding(upgrade); break;
+        case 'upgrade': calcUpgrade(upgrade); break;
       }
       
       if (purchase.efficiency <= efficiency) {
@@ -723,8 +723,8 @@ function checkCostCompensation(completeList, recalculate){
       }
       upgradeToggle(purchase, existingAchievements, reverseFunctions);
       switch (purchase.type) {
-        case 'building': calcBuilding(upgrade);
-        case 'upgrade': calcUpgrade(upgrade);
+        case 'building': calcBuilding(upgrade); break;
+        case 'upgrade': calcUpgrade(upgrade); break;
       }
     }
     if(!counter){
