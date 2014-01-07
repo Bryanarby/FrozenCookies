@@ -752,7 +752,7 @@ function recommendationList(recalculate) {
     var santaRecList = santaStats();
     var completeList = upgradeRecList.concat(buildingRecList).concat(santaRecList).sort(function(a,b){return (a.efficiency - b.efficiency)});
    //bug: it buys upgrades that are illegal.
-    completeList = checkCostCompensation(completeList, recalculate).sort(function(a,b){return (a.efficiency - b.efficiency)});
+    //completeList = checkCostCompensation(completeList, recalculate).sort(function(a,b){return (a.efficiency - b.efficiency)});
     FrozenCookies.caches.recommendationList = addScores(upgradeRecList.concat(buildingRecList).concat(santaRecList).sort(function(a,b){return (a.efficiency - b.efficiency)}));
   }
   return FrozenCookies.caches.recommendationList;
