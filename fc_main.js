@@ -879,7 +879,7 @@ function buildingStats(recalculate) {
   if (recalculate) {
     var buildingBlacklist = blacklist[FrozenCookies.blacklist].buildings;
     var currentBank = bestBank(0).cost;
-    FrozenCookies.caches.buildings = Game.ObjectsById.map(function (current) {return calcBuilding(current, index);});
+    FrozenCookies.caches.buildings = Game.ObjectsById.map(function (current, index) {return calcBuilding(current, index);});
   }
   return FrozenCookies.caches.buildings;
 }
