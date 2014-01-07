@@ -747,7 +747,7 @@ function recommendationList(recalculate) {
     var buildingRecList = buildingStats(recalculate);
     var santaRecList = santaStats();
     var completeList = upgradeRecList.concat(buildingRecList).concat(santaRecList).sort(function(a,b){return (a.efficiency - b.efficiency)});
-
+   //bug: it buys upgrades that are illegal.
     completeList = checkCostCompensation(completeList, recalculate).sort(function(a,b){return (a.efficiency - b.efficiency)});
     FrozenCookies.caches.recommendationList = addScores(upgradeRecList.concat(buildingRecList).concat(santaRecList).sort(function(a,b){return (a.efficiency - b.efficiency)}));
   }
@@ -807,7 +807,7 @@ function getCostReductionArray(type, recalculate) {
     //buildings
     for (x in buildingRedux) {
       var upgrade = buildingRedux[x];
-      if(!upgrade.bought){
+      if(!upgrade.bought && upgrade.unlocked){
         FrozenCookies.caches.costReduction[0].push([upgrade]);
       }
     }
