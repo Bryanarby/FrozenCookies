@@ -831,7 +831,8 @@ function getCostReductionArray(type, recalculate) {
       }
     }
     FrozenCookies.caches.costReduction[1].unshift([]);
-  }*/
+    */
+  }
   switch (type) {
     case 'building': return FrozenCookies.caches.costReduction[0];
     case 'upgrade': return FrozenCookies.caches.costReduction[1];
