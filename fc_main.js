@@ -735,14 +735,12 @@ function checkCostCompensation(completeList, recalculate) {
   		  }
   		  
   		  if(purchase.efficiency != Number.POSITIVE_INFINITY && purchaseReduced.efficiency <= purchaseReduced.efficiency){
-	  		  for(var y = completeList.length-1; y > 0; y--) {
-	  			if(completeList[y].id == upgrade.id) {
-	  			  completeList[y].efficiency = purchaseReduced.efficiency;
-	  			  completeList[y].delta_cps = 1;
-	  			}
-	  		  }
+	  		  //finding it takes too long, injecting them manually
+	  		  var newUpgrade = calcUpgrade(upgrade,0,0,1);
+	  		  newUpgrade.efficiency = purchaseReduced.efficiency;
+	  		  newUpgrade.delta_cps = 1;
+	  		  completeList.push(newUpgrade);
   		  }
-  
   		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
   	  }
     }
