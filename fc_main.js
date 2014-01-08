@@ -711,27 +711,28 @@ function checkCostCompensation(completeList, recalculate){
   if(purchase.type != 'santa') {
     for(var x = 1; x < costReductionList.length;x++){
       var upgrade = costReductionList[x][0];
+      upgrade = Game.UpgradesById[upgrade.id];
       var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
-      var reverseFunctions = upgradeToggle(Game.UpgradesById[upgrade.id]);
+      var reverseFunctions = upgradeToggle(upgrade);
       switch (purchase.type) {
-        case 'building': calcBuilding(purchase.purchase); break;
-        case 'upgrade': calcUpgrade(purchase.purchase, 1); break;
+        case 'building': calcBuilding(purchase.purchase, upgradePrereqCost(upgrade)); break;
+        case 'upgrade': calcUpgrade(purchase.purchase, upgradePrereqCost(upgrade), 1); break;
       }
       
       if (purchase.efficiency <= efficiency) {
-        winner = costReductionList[x];
+        winner = costReductionList[x][0];
         counter = x;
       }
       upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
       switch (purchase.type) {
         case 'building': calcBuilding(purchase.purchase); break;
-        case 'upgrade': calcUpgrade(purchase.purchase, 1); break;
+        case 'upgrade': calcUpgrade(purchase.purchase, 0, 1); break;
       }
     }
     if(counter){
       //find the upgrade, give it a fixed efficiency. code will figure out later which comes on top after buying that one.
       for(x in completeList){
-        if(completeList[x].id == winner[0].id){
+        if(completeList[x].id == winner.id){
           completeList[x].efficiency = efficiency;
         }
       }
@@ -859,7 +860,7 @@ function getCostReductionArray(type, recalculate) {
   }
 }
 
-function calcBuilding(current, index) {
+function calcBuilding(current, aditionalCost, index) {
   var buildingBlacklist = blacklist[FrozenCookies.blacklist].buildings;
   var currentBank = bestBank(0).cost;
   if (buildingBlacklist === true || _.contains(buildingBlacklist, current.id)) {
@@ -874,7 +875,7 @@ function calcBuilding(current, index) {
   buildingToggle(current, existingAchievements);
   var deltaCps = cpsNew - cpsOrig;
   var baseDeltaCps = baseCpsNew - baseCpsOrig;
-  var efficiency = purchaseEfficiency(current.getPrice(), deltaCps, baseDeltaCps, cpsOrig)
+  var efficiency = purchaseEfficiency(current.getPrice()+aditionalCost, deltaCps, baseDeltaCps, cpsOrig)
   return {'id' : current.id, 'efficiency' : efficiency, 'base_delta_cps' : baseDeltaCps, 'delta_cps' : deltaCps, 'cost' : current.getPrice(), 'purchase' : current, 'type' : 'building'};
 }
 
@@ -882,12 +883,12 @@ function buildingStats(recalculate) {
   if (recalculate) {
     var buildingBlacklist = blacklist[FrozenCookies.blacklist].buildings;
     var currentBank = bestBank(0).cost;
-    FrozenCookies.caches.buildings = Game.ObjectsById.map(function (current, index) {return calcBuilding(current, index);});
+    FrozenCookies.caches.buildings = Game.ObjectsById.map(function (current, index) {return calcBuilding(current, 0, index);});
   }
   return FrozenCookies.caches.buildings;
 }
 
-function calcUpgrade(current, ignoreToggle) {
+function calcUpgrade(current, aditionalCost, ignoreToggle) {
   var upgradeBlacklist = blacklist[FrozenCookies.blacklist].upgrades;
   var currentBank = bestBank(0).cost;
 
@@ -907,7 +908,7 @@ function calcUpgrade(current, ignoreToggle) {
     Game.elderWrath = existingWrath;
     var deltaCps = cpsNew - cpsOrig;
     var baseDeltaCps = baseCpsNew - baseCpsOrig;
-    var cost = upgradePrereqCost(current);
+    var cost = upgradePrereqCost(current)+ aditionalCost;
     var efficiency = purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig)
     return {'id' : current.id, 'efficiency' : efficiency, 'base_delta_cps' : baseDeltaCps, 'delta_cps' : deltaCps, 'cost' : cost, 'purchase' : current, 'type' : 'upgrade'};
   }
@@ -917,7 +918,7 @@ function upgradeStats(recalculate) {
   if (recalculate) {
     var upgradeBlacklist = blacklist[FrozenCookies.blacklist].upgrades;
     var currentBank = bestBank(0).cost;
-    FrozenCookies.caches.upgrades = Game.UpgradesById.map(function(current){return calcUpgrade(current,0);}).filter(function(a){return a;});
+    FrozenCookies.caches.upgrades = Game.UpgradesById.map(function(current){return calcUpgrade(current,0,0);}).filter(function(a){return a;});
   }
   return FrozenCookies.caches.upgrades;
 }
