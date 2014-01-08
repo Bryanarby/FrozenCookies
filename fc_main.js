@@ -722,11 +722,14 @@ function checkCostCompensation(completeList, recalculate) {
   			case 'building': purchaseReduced = calcBuilding(purchase.purchase, additionalCost, costReduction); break;
   			case 'upgrade': purchaseReduced = calcUpgrade(purchase.purchase, additionalCost, costReduction, 1); break;
   		  }
-  		  for(var y = completeList.length-1; y > 0; y--) {
-  			if(completeList[y].id == upgrade.id) {
-  			  completeList[y].efficiency = purchaseReduced.efficiency;
-  			  completeList[y].delta_cps = 1;
-  			}
+  		  
+  		  if(purchase.efficiency != Number.POSITIVE_INFINITY && purchaseReduced.efficiency <= purchaseReduced.efficiency){
+	  		  for(var y = completeList.length-1; y > 0; y--) {
+	  			if(completeList[y].id == upgrade.id) {
+	  			  completeList[y].efficiency = purchaseReduced.efficiency;
+	  			  completeList[y].delta_cps = 1;
+	  			}
+	  		  }
   		  }
   
   		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
