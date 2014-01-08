@@ -712,11 +712,12 @@ function checkCostCompensation(completeList, recalculate){
     for(var x = 1; x < costReductionList.length;x++){
       var upgrade = costReductionList[x][0];
       upgrade = Game.UpgradesById[upgrade.id];
+      var additionalCost = upgradePrereqCost(upgrade);
       var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
       var reverseFunctions = upgradeToggle(upgrade);
       switch (purchase.type) {
-        case 'building': calcBuilding(purchase.purchase, upgradePrereqCost(upgrade)); break;
-        case 'upgrade': calcUpgrade(purchase.purchase, upgradePrereqCost(upgrade), 1); break;
+        case 'building': calcBuilding(purchase.purchase, additionalCost); break;
+        case 'upgrade': calcUpgrade(purchase.purchase, additionalCost, 1); break;
       }
       
       if (purchase.efficiency <= efficiency) {
@@ -725,7 +726,7 @@ function checkCostCompensation(completeList, recalculate){
       }
       upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
       switch (purchase.type) {
-        case 'building': calcBuilding(purchase.purchase); break;
+        case 'building': calcBuilding(purchase.purchase, 0); break;
         case 'upgrade': calcUpgrade(purchase.purchase, 0, 1); break;
       }
     }
