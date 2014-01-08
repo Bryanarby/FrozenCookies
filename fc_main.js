@@ -12,7 +12,6 @@ function setOverrides() {
 
   FrozenCookies.autoCookies = [];
   // Set all cycleable preferences
-  _.keys(FrozenCookies.preferenceValues).forEach(function(preference) {
     FrozenCookies[preference] = preferenceParse(preference, FrozenCookies.preferenceValues[preference].default);
     updateAutoCookies(preference, FrozenCookies[preference]);
   });
@@ -1305,10 +1304,12 @@ function autoBuy() {
   if (FrozenCookies.autoBuy && (Game.cookies >= delayAmount() + recommendation.cost) && (nextChainedPurchase().delta_cps > 0)) {
     recommendation.time = Date.now() - Game.startDate;
 //  full_history.push(recommendation);  // Probably leaky, maybe laggy?
-    recommendation.purchase.clickFunction = null;
+//    recommendation.purchase.clickFunction = null;
     disabledPopups = false;
 //  console.log(purchase.name + ': ' + Beautify(recommendation.efficiency) + ',' + Beautify(recommendation.delta_cps));
     recommendation.purchase.buy();
+    //orteil changed behaviour when clickFunction is null..
+    recommendation.purchase.clickFunction = null;
     logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
     disabledPopups = true;
     FrozenCookies.recalculateCaches = true;
