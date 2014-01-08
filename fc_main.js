@@ -716,11 +716,21 @@ function checkCostCompensation(completeList, recalculate) {
 	    if(purchase.id != upgrade.id) {
   		  var additionalCost = upgradePrereqCost(upgrade);
   		  var costReduction = 1; //TODO make dynamic
+
+		    //upgrades efficiency fix
+		    var baseCpsOrig = baseCps();
+  		  var cpsOrig = baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + seasoncPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
+  		  
+  		  
   		  var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
   		  var reverseFunctions = upgradeToggle(upgrade);
   		  switch (purchase.type) {
   			case 'building': purchaseReduced = calcBuilding(purchase.purchase, additionalCost, costReduction); break;
-  			case 'upgrade': purchaseReduced = calcUpgrade(purchase.purchase, additionalCost, costReduction, 1); break;
+  			case 'upgrade': 
+  				purchaseReduced = purchase;
+  				purchaseReduced.cost = purchaseReduced.cost(100-costReduction)/100 + additionalCost;
+  				purchaseReduced.efficiency = purchaseEfficiency(purchaseReduced.cost, purchaseReduced.delta_cps, purchaseReduced.base_delta_cps, cpsOrig);
+  				break;
   		  }
   		  
   		  if(purchase.efficiency != Number.POSITIVE_INFINITY && purchaseReduced.efficiency <= purchaseReduced.efficiency){
@@ -733,10 +743,6 @@ function checkCostCompensation(completeList, recalculate) {
   		  }
   
   		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
-  		  switch (purchase.type) {
-  			case 'building': calcBuilding(purchase.purchase, 0, 0); break;
-  			case 'upgrade': calcUpgrade(purchase.purchase, 0, 0, 1); break;
-  		  }
   	  }
     }
   }
@@ -918,12 +924,6 @@ function calcUpgrade(current, aditionalCost, costReduction, ignoreToggle) {
     var baseDeltaCps = baseCpsNew - baseCpsOrig;
     var cost = upgradePrereqCost(current);
     var efficiency= purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig);
-    if(aditionalCost > 0) {
-    	if(efficiency != Number.POSITIVE_INFINITY){
-	    cost = upgradePrereqCost(current)*((100-costReduction)/100)+ aditionalCost;
-	    efficiency = purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig);
-    	}
-    }
     return {'id' : current.id, 'efficiency' : efficiency, 'base_delta_cps' : baseDeltaCps, 'delta_cps' : deltaCps, 'cost' : cost, 'purchase' : current, 'type' : 'upgrade'};
   }
 }
