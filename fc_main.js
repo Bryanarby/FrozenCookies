@@ -736,6 +736,7 @@ function checkCostCompensation(completeList, recalculate) {
   		  }
   		  
   		  if(purchase.efficiency != Number.POSITIVE_INFINITY && purchaseReduced.efficiency <= purchaseReduced.efficiency){
+	  		  //todo inject a new one to skip lookup..
 	  		  for(var y = completeList.length-1; y > 0; y--) {
 	  			if(completeList[y].id == upgrade.id) {
 	  			  completeList[y].efficiency = purchaseReduced.efficiency;
