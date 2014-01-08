@@ -730,8 +730,8 @@ function checkCostCompensation(completeList, recalculate) {
   			case 'building': purchaseReduced = calcBuilding(purchase.purchase, additionalCost, costReduction); break;
   			case 'upgrade': 
   				purchaseReduced = purchase;
-  				purchaseReduced.cost = purchaseReduced.cost*(100-costReduction)/100 + additionalCost;
-  				purchaseReduced.efficiency = purchaseEfficiency(purchaseReduced.cost, purchaseReduced.delta_cps, purchaseReduced.base_delta_cps, cpsOrig);
+  				var reducedCost = purchaseReduced.cost*(100-costReduction)/100 + additionalCost;
+  				purchaseReduced.efficiency = purchaseEfficiency(reducedCost, purchaseReduced.delta_cps, purchaseReduced.base_delta_cps, cpsOrig);
   				break;
   		  }
   		  
