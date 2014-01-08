@@ -913,6 +913,7 @@ function calcUpgrade(current, aditionalCost, costReduction, ignoreToggle) {
     var baseDeltaCps = baseCpsNew - baseCpsOrig;
     var cost = upgradePrereqCost(current);
     if(aditionalCost > 0) {
+    	console.log(current);
     	console.log(purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig));
     	cost = upgradePrereqCost(current)*((100-costReduction)/100)+ aditionalCost;
     }
