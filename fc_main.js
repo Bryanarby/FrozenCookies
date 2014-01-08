@@ -748,12 +748,13 @@ function checkCostCompensation(completeList, recalculate) {
 	  			  completeList[y].delta_cps = 1;
 	  			}
 	  		  }*/
-  		  }
-  
+  		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
+  		  } else{
   		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
   		  switch (purchase.type) {
   			case 'building': calcBuilding(purchase.purchase, 0,0); break;
   			case 'upgrade': calcBuilding(purchase.purchase, 0,0 ,0);break;
+  		  }
   		  }
   	  }
     }
