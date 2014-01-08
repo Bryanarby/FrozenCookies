@@ -12,6 +12,7 @@ function setOverrides() {
 
   FrozenCookies.autoCookies = [];
   // Set all cycleable preferences
+  _.keys(FrozenCookies.preferenceValues).forEach(function(preference) {
     FrozenCookies[preference] = preferenceParse(preference, FrozenCookies.preferenceValues[preference].default);
     updateAutoCookies(preference, FrozenCookies[preference]);
   });
