@@ -714,11 +714,9 @@ function checkCostCompensation(completeList, recalculate) {
     for(var x = 1; x < costReductionList.length;x++) {
       var upgrade = costReductionList[x][0];
       upgrade = Game.UpgradesById[upgrade.id];
-      //var newUpgrade = calcUpgrade(upgrade,0,0,0);
-      
 	    if(purchase.id != upgrade.id) {
   		  var additionalCost = upgradePrereqCost(upgrade);
-  		  var costReduction = 1; //costReductionList[x][0] //TODO make dynamic
+  		  var costReduction = 1; //TODO make dynamic
 
 		    //upgrades efficiency fix
 		  var currentBank = bestBank(0).cost;
@@ -739,23 +737,15 @@ function checkCostCompensation(completeList, recalculate) {
   		  
   		  if(purchase.efficiency != Number.POSITIVE_INFINITY && purchaseReduced.efficiency <= purchaseReduced.efficiency){
 	  		  //todo inject a new one to skip lookup..
-	  		  /*newUpgrade.efficiency = purchaseReduced.efficiency;
-	  		  newUpgrade.delta_cps = 1;
-	  		  completeList.push(newUpgrade);
-	  		  */for(var y = completeList.length-1; y > 0; y--) {
+	  		  for(var y = completeList.length-1; y > 0; y--) {
 	  			if(completeList[y].id == upgrade.id) {
 	  			  completeList[y].efficiency = purchaseReduced.efficiency;
 	  			  completeList[y].delta_cps = 1;
 	  			}
-	          }
-  		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
-  		  } else{
-  		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
-  		  switch (purchase.type) {
-  			case 'building': calcBuilding(purchase.purchase, 0,0); break;
-  			case 'upgrade': calcBuilding(purchase.purchase, 0,0 ,0);break;
+	  		  }
   		  }
-  		  }
+  
+  		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
   	  }
     }
   }
