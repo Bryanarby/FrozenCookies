@@ -714,9 +714,12 @@ function checkCostCompensation(completeList, recalculate) {
     for(var x = 1; x < costReductionList.length;x++) {
       var upgrade = costReductionList[x][0];
       upgrade = Game.UpgradesById[upgrade.id];
+      var newUpgrade = calcUpgrade(upgrade,0,0,0);
+      console.log(newUpgrade);
+	  		  
 	    if(purchase.id != upgrade.id) {
   		  var additionalCost = upgradePrereqCost(upgrade);
-  		  var costReduction = 1; //TODO make dynamic
+  		  var costReduction = 1; //costReductionList[x][0] //TODO make dynamic
 
 		    //upgrades efficiency fix
 		  var currentBank = bestBank(0).cost;
