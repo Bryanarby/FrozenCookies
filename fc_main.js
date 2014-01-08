@@ -876,6 +876,7 @@ function calcBuilding(current, aditionalCost, index) {
   buildingToggle(current, existingAchievements);
   var deltaCps = cpsNew - cpsOrig;
   var baseDeltaCps = baseCpsNew - baseCpsOrig;
+  if(aditionalCost > 0) {console.log(aditionalCost);}
   var efficiency = purchaseEfficiency(current.getPrice()+aditionalCost, deltaCps, baseDeltaCps, cpsOrig)
   return {'id' : current.id, 'efficiency' : efficiency, 'base_delta_cps' : baseDeltaCps, 'delta_cps' : deltaCps, 'cost' : current.getPrice(), 'purchase' : current, 'type' : 'building'};
 }
@@ -909,6 +910,7 @@ function calcUpgrade(current, aditionalCost, ignoreToggle) {
     Game.elderWrath = existingWrath;
     var deltaCps = cpsNew - cpsOrig;
     var baseDeltaCps = baseCpsNew - baseCpsOrig;
+    if(aditionalCost > 0) {console.log(aditionalCost);}
     var cost = upgradePrereqCost(current)+ aditionalCost;
     var efficiency = purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig)
     return {'id' : current.id, 'efficiency' : efficiency, 'base_delta_cps' : baseDeltaCps, 'delta_cps' : deltaCps, 'cost' : cost, 'purchase' : current, 'type' : 'upgrade'};
