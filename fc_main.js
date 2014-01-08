@@ -725,6 +725,7 @@ function checkCostCompensation(completeList, recalculate) {
   		  for(var y = completeList.length-1; y > 0; y--) {
   			if(completeList[y].id == upgrade.id) {
   			  completeList[y].efficiency = purchaseReduced.efficiency;
+  			  completeList[y].delta_cps = 1;
   			}
   		  }
   
@@ -1301,16 +1302,13 @@ function autoReindeer() {
 
 function autoBuy() {
   var recommendation = nextPurchase(FrozenCookies.recalculateCaches);
-    
   if (FrozenCookies.autoBuy && (Game.cookies >= delayAmount() + recommendation.cost) && (nextChainedPurchase().delta_cps > 0)) {
     recommendation.time = Date.now() - Game.startDate;
 //  full_history.push(recommendation);  // Probably leaky, maybe laggy?
-//    recommendation.purchase.clickFunction = null;
+    recommendation.purchase.clickFunction = null;
     disabledPopups = false;
 //  console.log(purchase.name + ': ' + Beautify(recommendation.efficiency) + ',' + Beautify(recommendation.delta_cps));
     recommendation.purchase.buy();
-    //orteil changed behaviour when clickFunction is null..
-    recommendation.purchase.clickFunction = null;
     logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
     disabledPopups = true;
     FrozenCookies.recalculateCaches = true;
