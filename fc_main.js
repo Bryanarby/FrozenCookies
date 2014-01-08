@@ -713,8 +713,8 @@ function checkCostCompensation(completeList, recalculate) {
   if(purchase.type != 'santa') {
     for(var x = 1; x < costReductionList.length;x++) {
       var upgrade = costReductionList[x][0];
-      //upgrade = Game.UpgradesById[upgrade.id];
-      var newUpgrade = calcUpgrade(upgrade,0,0,0);
+      upgrade = Game.UpgradesById[upgrade.id];
+      //var newUpgrade = calcUpgrade(upgrade,0,0,0);
       
 	    if(purchase.id != upgrade.id) {
   		  var additionalCost = upgradePrereqCost(upgrade);
