@@ -737,6 +737,7 @@ function checkCostCompensation(completeList, recalculate) {
   		  if(purchase.efficiency != Number.POSITIVE_INFINITY && purchaseReduced.efficiency <= purchaseReduced.efficiency){
 	  		  //finding it takes too long, injecting them manually
 	  		  var newUpgrade = calcUpgrade(upgrade,0,0,1);
+	  		  console.log(newUpgrade);
 	  		  newUpgrade.efficiency = purchaseReduced.efficiency;
 	  		  newUpgrade.delta_cps = 1;
 	  		  completeList.push(newUpgrade);
