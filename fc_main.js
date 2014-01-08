@@ -721,7 +721,7 @@ function checkCostCompensation(completeList, recalculate){
         case 'upgrade': calcUpgrade(purchase.purchase, additionalCost, costReduction, 1); break;
       }
       
-      if (purchase.efficiency <= efficiency) {
+      if (purchase.efficiency < efficiency) {
         winner = costReductionList[x][0];
         counter = x;
       }
@@ -877,8 +877,14 @@ function calcBuilding(current, aditionalCost, costReduction, index) {
   buildingToggle(current, existingAchievements);
   var deltaCps = cpsNew - cpsOrig;
   var baseDeltaCps = baseCpsNew - baseCpsOrig;
-  if(aditionalCost > 0) {console.log(aditionalCost);}
-  var efficiency = purchaseEfficiency(current.getPrice()*((100-costReduction)/100)+aditionalCost, deltaCps, baseDeltaCps, cpsOrig)
+  var cost = current.getPrice();
+  var efficiency= purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig);
+  if(aditionalCost > 0) {
+  	if(efficiency != Number.POSITIVE_INFINITY){
+		cost = current.getPrice()*((100-costReduction)/100)+ aditionalCost;
+	     efficiency = purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig);
+    	}
+    }
   return {'id' : current.id, 'efficiency' : efficiency, 'base_delta_cps' : baseDeltaCps, 'delta_cps' : deltaCps, 'cost' : current.getPrice(), 'purchase' : current, 'type' : 'building'};
 }
 
@@ -912,13 +918,13 @@ function calcUpgrade(current, aditionalCost, costReduction, ignoreToggle) {
     var deltaCps = cpsNew - cpsOrig;
     var baseDeltaCps = baseCpsNew - baseCpsOrig;
     var cost = upgradePrereqCost(current);
+    var efficiency= purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig);
     if(aditionalCost > 0) {
-    	console.log(current);
-    	console.log(purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig));
-    	cost = upgradePrereqCost(current)*((100-costReduction)/100)+ aditionalCost;
+    	if(efficiency != Number.POSITIVE_INFINITY){
+	    cost = upgradePrereqCost(current)*((100-costReduction)/100)+ aditionalCost;
+	    efficiency = purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig);
+    	}
     }
-    var efficiency = purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig)
-    console.log(efficiency);
     return {'id' : current.id, 'efficiency' : efficiency, 'base_delta_cps' : baseDeltaCps, 'delta_cps' : deltaCps, 'cost' : cost, 'purchase' : current, 'type' : 'upgrade'};
   }
 }
