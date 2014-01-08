@@ -911,9 +911,13 @@ function calcUpgrade(current, aditionalCost, costReduction, ignoreToggle) {
     Game.elderWrath = existingWrath;
     var deltaCps = cpsNew - cpsOrig;
     var baseDeltaCps = baseCpsNew - baseCpsOrig;
-    if(aditionalCost > 0) {console.log(aditionalCost);}
-    var cost = upgradePrereqCost(current)*((100-costReduction)/100)+ aditionalCost;
+    var cost = upgradePrereqCost(current);
+    if(aditionalCost > 0) {
+    	console.log(purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig));
+    	cost = upgradePrereqCost(current)*((100-costReduction)/100)+ aditionalCost;
+    }
     var efficiency = purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig)
+    console.log(efficiency);
     return {'id' : current.id, 'efficiency' : efficiency, 'base_delta_cps' : baseDeltaCps, 'delta_cps' : deltaCps, 'cost' : cost, 'purchase' : current, 'type' : 'upgrade'};
   }
 }
