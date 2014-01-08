@@ -702,43 +702,38 @@ function purchaseEfficiency(price, deltaCps, baseDeltaCps, currentCps) {
   return efficiency;
 }
 
-function checkCostCompensation(completeList, recalculate){
+function checkCostCompensation(completeList, recalculate) {
   var purchase = completeList[0];
+  var purchaseReduced;
   var costReductionList = getCostReductionArray(purchase.type, recalculate);
   var winner = purchase;
   var counter = 0;
   var efficiency = purchase.efficiency;
   if(purchase.type != 'santa') {
-    for(var x = 1; x < costReductionList.length;x++){
+    for(var x = 1; x < costReductionList.length;x++) {
       var upgrade = costReductionList[x][0];
       upgrade = Game.UpgradesById[upgrade.id];
-      var additionalCost = upgradePrereqCost(upgrade);
-      var costReduction = 1; //TODO make dynamic
-      var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
-      var reverseFunctions = upgradeToggle(upgrade);
-      switch (purchase.type) {
-        case 'building': calcBuilding(purchase.purchase, additionalCost, costReduction); break;
-        case 'upgrade': calcUpgrade(purchase.purchase, additionalCost, costReduction, 1); break;
-      }
-      
-      if (purchase.efficiency < efficiency) {
-        winner = costReductionList[x][0];
-        counter = x;
-      }
-      upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
-      switch (purchase.type) {
-        case 'building': calcBuilding(purchase.purchase, 0, 0); break;
-        case 'upgrade': calcUpgrade(purchase.purchase, 0, 0, 1); break;
-      }
-    }
-    if(counter){
-      //find the upgrade, give it a fixed efficiency. code will figure out later which comes on top after buying that one.
-      for(x in completeList){
-        if(completeList[x].id == winner.id){
-          completeList[x].efficiency = efficiency;
-        }
-      }
-      completeList[0].efficiency = 1;
+	    if(purchase.id != upgrade.id) {
+  		  var additionalCost = upgradePrereqCost(upgrade);
+  		  var costReduction = 1; //TODO make dynamic
+  		  var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
+  		  var reverseFunctions = upgradeToggle(upgrade);
+  		  switch (purchase.type) {
+  			case 'building': purchaseReduced = calcBuilding(purchase.purchase, additionalCost, costReduction); break;
+  			case 'upgrade': purchaseReduced = calcUpgrade(purchase.purchase, additionalCost, costReduction, 1); break;
+  		  }
+  		  for(var y = completeList.length-1; y > 0; y--) {
+  			if(completeList[y].id == upgrade.id) {
+  			  completeList[y].efficiency = purchaseReduced.efficiency;
+  			}
+  		  }
+  
+  		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
+  		  switch (purchase.type) {
+  			case 'building': calcBuilding(purchase.purchase, 0, 0); break;
+  			case 'upgrade': calcUpgrade(purchase.purchase, 0, 0, 1); break;
+  		  }
+  	  }
     }
   }
   return completeList;
