@@ -719,7 +719,7 @@ function checkCostCompensation(completeList, recalculate){
       }
       
       if (purchase.efficiency <= efficiency) {
-        winner = costReductionList[0];
+        winner = costReductionList[x];
         counter = x;
       }
       upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
@@ -728,11 +728,13 @@ function checkCostCompensation(completeList, recalculate){
         case 'upgrade': calcUpgrade(purchase.purchase, 1); break;
       }
     }
-    if(!counter){
+    if(counter){
+      console.log(winner[0].id);
       //find the upgrade, give it a fixed efficiency. code will figure out later which comes on top after buying that one.
       for(x in completeList){
-        if(completeList[x].upgrade === winner){
-          completeList[x].efficiency = 0;
+        console.log(completeList[x].id);
+        if(completeList[x].id == winner[0].id){
+        completeList[x].efficiency = 0;
         }
       }
       completeList[0].efficiency = efficiency;
@@ -740,7 +742,6 @@ function checkCostCompensation(completeList, recalculate){
   }
   return completeList;
 }
-
 function recommendationList(recalculate) {
   if (recalculate) {
     var upgradeRecList = upgradeStats(recalculate);
