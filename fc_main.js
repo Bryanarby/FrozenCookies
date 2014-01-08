@@ -749,6 +749,11 @@ function checkCostCompensation(completeList, recalculate) {
 	  			}
 	  		  }
   		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
+  		  switch (purchase.type) {
+  			case 'building': break;
+  			case 'upgrade': calcBuilding(purchase.purchase, 0,0 ,0);break;
+  		  }
+  		  }
   		  } else{
   		  upgradeToggle(Game.UpgradesById[upgrade.id], existingAchievements, reverseFunctions);
   		  switch (purchase.type) {
