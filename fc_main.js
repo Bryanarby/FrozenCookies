@@ -718,7 +718,8 @@ function checkCostCompensation(completeList, recalculate) {
   		  var costReduction = 1; //TODO make dynamic
 
 		    //upgrades efficiency fix
-		    var baseCpsOrig = baseCps();
+		  var currentBank = bestBank(0).cost;
+  		  var baseCpsOrig = baseCps();
   		  var cpsOrig = baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + seasoncPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
   		  
   		  
