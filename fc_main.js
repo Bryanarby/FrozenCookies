@@ -936,7 +936,7 @@ function upgradeStats(recalculate) {
   if (recalculate) {
     var upgradeBlacklist = blacklist[FrozenCookies.blacklist].upgrades;
     var currentBank = bestBank(0).cost;
-    FrozenCookies.caches.upgrades = Game.UpgradesById.map(function(current){return calcUpgrade(current,0,0,0);}).filter(function(a){return a;});
+    FrozenCookies.caches.upgrades = Game.UpgradesById.map(function(current){return calcUpgrade(current,0,0);}).filter(function(a){return a;});
   }
   return FrozenCookies.caches.upgrades;
 }
