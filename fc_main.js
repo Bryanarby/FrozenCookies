@@ -1323,6 +1323,18 @@ function autoBuy() {
   }
 }
 
+function wrinklerValue(number){
+  var result = 0;
+  if(!number){
+    for(x in Game.wrinklers){
+    	result += Game.wrinklers[x].sucked *1.1;
+    }
+  } else {
+  	result = Game.wrinklers[number].sucked *1.1;
+  }
+  return result;
+}
+
 function autoWrinkler() {
   if (FrozenCookies.autoWrinkler) {
     var recommendation = nextPurchase();	
@@ -1337,7 +1349,7 @@ function autoWrinkler() {
       if (popCount) {
         logEvent('Wrinkler', 'Popped ' + popCount + ' wrinklers in attempt to gain cookies.');
       }
-    } else if (Game.wrinklers.reduce(function(sum,w) {return sum + w.sucked * 1.1;}) + Game.cookies >= delayAmount() + recommendation.cost) {
+    } else if (wrinklerValue(1) + Game.cookies >= delayAmount() + recommendation.cost) {
       Game.wrinklers.forEach(function(w) {
         if (w.phase) {
           w.hp = 0;
