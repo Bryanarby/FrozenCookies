@@ -1349,7 +1349,7 @@ function autoWrinkler() {
       if (popCount) {
         logEvent('Wrinkler', 'Popped ' + popCount + ' wrinklers in attempt to gain cookies.');
       }
-    } else if (wrinklerValue(1) + Game.cookies >= delayAmount() + recommendation.cost) {
+    } else if (wrinklerValue() + Game.cookies >= delayAmount() + recommendation.cost) {
       Game.wrinklers.forEach(function(w) {
         if (w.phase) {
           w.hp = 0;
