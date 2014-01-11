@@ -1325,6 +1325,7 @@ function autoBuy() {
 
 function autoWrinkler() {
   if (FrozenCookies.autoWrinkler) {
+    var recommendation = nextPurchase();	
     var popCount = 0;
     if (!haveAllHalloween()) {
       Game.wrinklers.forEach(function(w) {
