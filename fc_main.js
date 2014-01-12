@@ -1309,7 +1309,13 @@ function autoReindeer() {
 
 function autoBuy() {
   var recommendation = nextPurchase(FrozenCookies.recalculateCaches);
-  if (FrozenCookies.autoBuy && (Game.cookies >= delayAmount() + recommendation.cost) && (nextChainedPurchase().delta_cps > 0)) {
+  if (FrozenCookies.autoBuy && (Game.cookies + wrinklerValue() >= delayAmount() + recommendation.cost) && (nextChainedPurchase().delta_cps > 0)) {
+    
+    //aware this is inefficient
+    if(wrinklerValue()){ 
+    	logEvent('Wrinkler', 'Popped Wrinklers for ' + wrinklerValue() + ' to make Purchase.');
+    	Game.CollectWrinklers(); 
+    }
     recommendation.time = Date.now() - Game.startDate;
 //  full_history.push(recommendation);  // Probably leaky, maybe laggy?
     recommendation.purchase.clickFunction = null;
@@ -1321,7 +1327,7 @@ function autoBuy() {
     FrozenCookies.recalculateCaches = true;
     FrozenCookies.processing = true;
   }
-}
+} 
 
 function wrinklerValue(number){
   var result = 0;
@@ -1349,7 +1355,9 @@ function autoWrinkler() {
       if (popCount) {
         logEvent('Wrinkler', 'Popped ' + popCount + ' wrinklers in attempt to gain cookies.');
       }
-    } else if (wrinklerValue() + Game.cookies >= delayAmount() + recommendation.cost) {
+    } 
+    //there's no need to do this here.
+    /*else if (wrinklerValue() + Game.cookies >= delayAmount() + recommendation.cost) {
       Game.wrinklers.forEach(function(w) {
         if (w.phase) {
           w.hp = 0;
@@ -1359,7 +1367,7 @@ function autoWrinkler() {
       if (popCount) {
         logEvent('Wrinkler', 'Popped ' + popCount + ' wrinklers to make a purchase.');
       }
-    }
+    }*/
   }
 }
 
