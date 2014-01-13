@@ -1314,7 +1314,15 @@ function autoBuy() {
     //aware this is inefficient
     if(wrinklerValue()){ 
     	logEvent('Wrinkler', 'Popped Wrinklers for ' + wrinklerValue() + ' to make Purchase.');
-    	Game.CollectWrinklers(); 
+    	
+    	//Game.CollectWrinklers(); 
+    	//suspecting that calling above method too often makes the game infinite-loop. older method is back
+    	Game.wrinklers.forEach(function(w) {
+        if (w.phase) {
+          w.hp = 0;
+          popCount += 1;
+        }
+      });
     }
     recommendation.time = Date.now() - Game.startDate;
 //  full_history.push(recommendation);  // Probably leaky, maybe laggy?
