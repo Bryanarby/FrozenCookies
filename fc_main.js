@@ -1320,7 +1320,6 @@ function autoBuy() {
     	Game.wrinklers.forEach(function(w) {
         if (w.phase) {
           w.hp = 0;
-          popCount += 1;
         }
       });
     }
