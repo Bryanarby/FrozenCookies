@@ -1309,21 +1309,10 @@ function autoReindeer() {
 
 function autoBuy() {
   var recommendation = nextPurchase(FrozenCookies.recalculateCaches);
-  if (FrozenCookies.autoBuy && (Game.cookies + wrinklerValue() >= delayAmount() + recommendation.cost) && (nextChainedPurchase().delta_cps > 0)) {
+  var wrinkler = biggestWrinkler();
+  if (FrozenCookies.autoBuy && (Game.cookies + wrinkler.sucked*1.1 >= delayAmount() + recommendation.cost) && (nextChainedPurchase().delta_cps > 0)) {
     
-    //aware this is inefficient
-    if(wrinklerValue()){ 
-    	logEvent('Wrinkler', 'Popped Wrinklers for ' + wrinklerValue() + ' to make Purchase.');
-    	
-    	//Game.CollectWrinklers(); 
-    	//suspecting that calling above method too often makes the game infinite-loop. older method is back
-    	Game.wrinklers.forEach(function(w) {
-        if (w.phase) {
-          w.hp = 0;
-        }
-      });
-    }
-    //actual check to give game to catch up with honoring the wrinklers exploding
+    //actual check to give game to catch up with honoring the wrinkler exploding
     if ((Game.cookies >= delayAmount() + recommendation.cost)) {
 	    recommendation.time = Date.now() - Game.startDate;
 	//  full_history.push(recommendation);  // Probably leaky, maybe laggy?
@@ -1335,9 +1324,15 @@ function autoBuy() {
 	    disabledPopups = true;
 	    FrozenCookies.recalculateCaches = true;
 	    FrozenCookies.processing = true;
+    } else {
+    	wrinkler.hp = 0;
     }
   }
 } 
+
+function biggestWrinkler(){
+ return Game.wrinklers.sort(function(a,b){return (b.sucked*1.1 - a.sucked*1.1)})[0];
+}
 
 function wrinklerValue(number){
   var result = 0;
