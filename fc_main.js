@@ -1307,6 +1307,12 @@ function autoReindeer() {
 	}
 }
 
+function shouldPopWrinkler(){
+	//lazy way to re-sort them.
+	biggestWrinkler();
+	return (Game.frenzy == 0 || Game.frenzyPower <= 1) && Game.wrinklers[9].sucked > 0);
+}
+
 function autoBuy() {
   var recommendation = nextPurchase(FrozenCookies.recalculateCaches);
   var wrinkler = biggestWrinkler();
@@ -1318,13 +1324,12 @@ function autoBuy() {
 	//  full_history.push(recommendation);  // Probably leaky, maybe laggy?
 	    recommendation.purchase.clickFunction = null;
 	    disabledPopups = false;
-	//  console.log(purchase.name + ': ' + Beautify(recommendation.efficiency) + ',' + Beautify(recommendation.delta_cps));
 	    recommendation.purchase.buy();
 	    logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
 	    disabledPopups = true;
 	    FrozenCookies.recalculateCaches = true;
 	    FrozenCookies.processing = true;
-    } else if(Game.frenzy == 0 || Game.frenzyPower <= 1){
+    } else if(shouldPopWrinkler()){
     	wrinkler.hp = 0;
     }
   }
