@@ -1324,16 +1324,19 @@ function autoBuy() {
         }
       });
     }
-    recommendation.time = Date.now() - Game.startDate;
-//  full_history.push(recommendation);  // Probably leaky, maybe laggy?
-    recommendation.purchase.clickFunction = null;
-    disabledPopups = false;
-//  console.log(purchase.name + ': ' + Beautify(recommendation.efficiency) + ',' + Beautify(recommendation.delta_cps));
-    recommendation.purchase.buy();
-    logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
-    disabledPopups = true;
-    FrozenCookies.recalculateCaches = true;
-    FrozenCookies.processing = true;
+    //actual check to give game to catch up with honoring the wrinklers exploding
+    if ((Game.cookies >= delayAmount() + recommendation.cost)) {
+	    recommendation.time = Date.now() - Game.startDate;
+	//  full_history.push(recommendation);  // Probably leaky, maybe laggy?
+	    recommendation.purchase.clickFunction = null;
+	    disabledPopups = false;
+	//  console.log(purchase.name + ': ' + Beautify(recommendation.efficiency) + ',' + Beautify(recommendation.delta_cps));
+	    recommendation.purchase.buy();
+	    logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
+	    disabledPopups = true;
+	    FrozenCookies.recalculateCaches = true;
+	    FrozenCookies.processing = true;
+    }
   }
 } 
 
