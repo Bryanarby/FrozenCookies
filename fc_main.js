@@ -1324,7 +1324,7 @@ function autoBuy() {
 	    disabledPopups = true;
 	    FrozenCookies.recalculateCaches = true;
 	    FrozenCookies.processing = true;
-    } else {
+    } else if(Game.frenzy == 0 || Game.frenzyPower <= 1){
     	wrinkler.hp = 0;
     }
   }
