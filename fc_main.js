@@ -1310,7 +1310,7 @@ function autoReindeer() {
 function shouldPopWrinkler(){
 	//lazy way to re-sort them.
 	biggestWrinkler();
-	return (Game.frenzy == 0 || Game.frenzyPower <= 1) && Game.wrinklers[9].sucked > 0);
+	return ((Game.frenzy == 0 || Game.frenzyPower <= 1) && Game.wrinklers[9].sucked > 0);
 }
 
 function autoBuy() {
