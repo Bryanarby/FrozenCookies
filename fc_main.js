@@ -1341,11 +1341,11 @@ function biggestWrinkler(){
 
 function wrinklerValue(number){
   var result = 0;
-  if(!number){
+  if(number===undefined){
     for(x in Game.wrinklers){
     	result += Game.wrinklers[x].sucked *1.1;
     }
-  } else {
+  } else if(number >=0 && number < 10){
   	result = Game.wrinklers[number].sucked *1.1;
   }
   return result;
