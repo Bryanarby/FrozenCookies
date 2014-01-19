@@ -212,6 +212,12 @@ function updateTimers() {
     gc_delay = (probabilitySpan('golden', Game.goldenCookie.time, 0.5) - Game.goldenCookie.time) / maxCookieTime(),
     gc_max_delay = (probabilitySpan('golden', Game.goldenCookie.time, 0.99) - Game.goldenCookie.time) / maxCookieTime(),
     gc_min_delay = (probabilitySpan('golden', Game.goldenCookie.time, 0.01) - Game.goldenCookie.time) / maxCookieTime(),
+    
+    //todo make this season dynamic
+    reindeer_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.5) - Game.seasonPopup.time) / maxReindeerTime(),
+    reindeer_max_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.5) - Game.seasonPopup.time) / maxReindeerTime(),
+    reindeer_min_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.5) - Game.seasonPopup.time) / maxReindeerTime(),
+    
     frenzy_delay = Game.frenzy / maxCookieTime(),
     click_frenzy_delay = Game.clickFrenzy / maxCookieTime(),
     decimal_HC_complete = ((Math.sqrt((Game.cookiesEarned + Game.cookiesReset)/0.5e12+0.25)-0.5)%1),
@@ -270,6 +276,29 @@ function updateTimers() {
         overlay: true
       });
     }
+  }
+  if (reindeer_delay>0) {
+    t_draw.push({
+      f_percent: reindeer_max_delay,
+      c1: "rgba(0, 255, 155, 1)",
+      name: "Reindeer Maximum (99%)",
+      display: timeDisplay((reindeer_max_delay * maxReindeerTime()) / Game.fps)
+    });
+    t_draw.push({
+      f_percent: reindeer_delay,
+      c1: "rgba(0, 255, 195, 1)",
+      name: "Reindeer Estimate (50%)",
+      display: timeDisplay((reindeer_delay * maxReindeerTime()) / Game.fps),
+      overlay: true
+    });
+    t_draw.push({
+      f_percent: reindeer_min_delay,
+      c1: "rgba(0, 255, 235, 1)",
+      name: "Reindeer Minimum (1%)",
+      display: timeDisplay((reindeer_min_delay * maxReindeerTime()) / Game.fps),
+      overlay: true
+
+    });
   }
   if (gc_delay>0) {
     t_draw.push({
