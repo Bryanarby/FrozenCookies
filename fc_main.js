@@ -635,6 +635,10 @@ function maxLuckyValue() {
   return baseCps() * gcMod;
 }
 
+function maxReindeerTime() {
+  return Game.seasonPopup.maxTime
+}
+
 function maxCookieTime() {
   return Game.goldenCookie.maxTime
 }
