@@ -277,29 +277,6 @@ function updateTimers() {
       });
     }
   }
-  if (reindeer_delay>0) {
-    t_draw.push({
-      f_percent: reindeer_max_delay,
-      c1: "rgba(0, 255, 155, 1)",
-      name: "Reindeer Maximum (99%)",
-      display: timeDisplay((reindeer_max_delay * maxReindeerTime()) / Game.fps)
-    });
-    t_draw.push({
-      f_percent: reindeer_delay,
-      c1: "rgba(0, 255, 195, 1)",
-      name: "Reindeer Estimate (50%)",
-      display: timeDisplay((reindeer_delay * maxReindeerTime()) / Game.fps),
-      overlay: true
-    });
-    t_draw.push({
-      f_percent: reindeer_min_delay,
-      c1: "rgba(0, 255, 235, 1)",
-      name: "Reindeer Minimum (1%)",
-      display: timeDisplay((reindeer_min_delay * maxReindeerTime()) / Game.fps),
-      overlay: true
-
-    });
-  }
   if (gc_delay>0) {
     t_draw.push({
       f_percent: gc_max_delay,
@@ -319,6 +296,29 @@ function updateTimers() {
       c1: "rgba(255, 235, 0, 1)",
       name: "Golden Cookie Minimum (1%)",
       display: timeDisplay((gc_min_delay * maxCookieTime()) / Game.fps),
+      overlay: true
+
+    });
+  }
+  if (reindeer_delay>0) {
+    t_draw.push({
+      f_percent: reindeer_max_delay,
+      c1: "rgba(0, 155, 0, 1)",
+      name: "Reindeer Maximum (99%)",
+      display: timeDisplay((reindeer_max_delay * maxReindeerTime()) / Game.fps)
+    });
+    t_draw.push({
+      f_percent: reindeer_delay,
+      c1: "rgba(0, 195, 0, 1)",
+      name: "Reindeer Estimate (50%)",
+      display: timeDisplay((reindeer_delay * maxReindeerTime()) / Game.fps),
+      overlay: true
+    });
+    t_draw.push({
+      f_percent: reindeer_min_delay,
+      c1: "rgba(0, 255, 0, 1)",
+      name: "Reindeer Minimum (1%)",
+      display: timeDisplay((reindeer_min_delay * maxReindeerTime()) / Game.fps),
       overlay: true
 
     });
