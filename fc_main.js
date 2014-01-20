@@ -65,7 +65,7 @@ function setOverrides() {
   FrozenCookies.clickedGC = false;
   FrozenCookies.clickedReindeer = false;
   FrozenCookies.logWindow = 2;
-  FrozenCookies.clickableAlive = 0;
+  FrozenCookies.GCPending = false;
   
   if (!blacklist[FrozenCookies.blacklist]) {
     FrozenCookies.blacklist = 'none';
@@ -83,7 +83,7 @@ function setOverrides() {
   Game.RebuildUpgrades();
   beautifyUpgradesAndAchievements();
   // Replace Game.Popup references with event logging
-  eval("Game.goldenCookie.click = " + Game.goldenCookie.click.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("GC", $1, true);'));
+  eval("Game.goldenCookie.click = " + Game.goldenCookie.click.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("GC", $1, true); FrozenCookies.GCPending = false;'));
   eval("Game.UpdateWrinklers = " + Game.UpdateWrinklers.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("Wrinkler", $1, true);'));
   eval("Game.seasonPopup.click = " + Game.seasonPopup.click.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("Reindeer", $1, true);'));
   /*
@@ -1331,32 +1331,6 @@ function logging() {
  
 }
 
-function shouldClickReindeer() {
-  if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
-    //stall if there's no frenzy, or when we're in a clot
-    if (Game.frenzy == 0 || (Game.frenzy > 0 && Game.frenzyPower < 1)) {
-      if(Game.seasonPopup.life == 1 ){
-      	return true;
-      }  	
-    } else {
-      return true;
-    }
-  }
-  return false;
-}
-
-
-function autoReindeer() {
-  if(!FrozenCookies.clickedReindeer) {
-	  if (shouldClickReindeer() && FrozenCookies.autoReindeer) {
-	    Game.seasonPopup.click();
-      FrozenCookies.clickedReindeer = true;
-	  } 
-  } else if (Game.seasonPopup.time < Game.seasonPopup.getMinTime() && Game.seasonPopup.life == 0) {
-	    FrozenCookies.clickedReindeer = false;
-	}
-}
-
 function shouldPopWrinkler(){
 	//lazy way to re-sort them.
 	biggestWrinkler();
@@ -1431,16 +1405,57 @@ function autoWrinkler() {
   }
 }
 
-function shouldClickGC() {
-  if (Game.goldenCookie.life > 0 && FrozenCookies.autoGC) {
-    //stall when no reindeer, until end of life.. or when clot..
-    //todo add smart gimick to use cookie chains to align reindeers with GC more often.
-    if (Game.seasonPopup.life == 0 || (Game.frenzy > 0 && Game.frenzyPower < 1)) {
-      if(Game.goldenCookie.life == 1 ){
-      	return true;
-      }  	
+function GCReindeerSynced() {
+  var accuracy = 150;
+  var etaReindeer = probabilitySpan('reindeer', Game.seasonPopup.time, 0.5) - Game.seasonPopup.time;
+  var etaGC = probabilitySpan('golden', Game.goldenCookie.time, 0.5) - Game.goldenCookie.time;
+  return (Math.abs(etaReindeer - etaGC) <= accuracy);
+}
+
+function shouldClickReindeer() {
+  var responseDelay = 15;
+  if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
+    var etaGC = probabilitySpan('golden', Game.goldenCookie.time, 0.5) - Game.goldenCookie.time;
+    if(GCReindeerSynced() && !FrozenCookies.GCPending) {
+      if(Game.seasonPopup.life > responseDelay || Game.seasonPopup.life > etaGC) {
+        return false;
+      } else {
+        return true;
+      }
     } else {
-      return true;
+      if(Game.seasonPopup.life > etaGC){
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function autoReindeer() {
+  if(!FrozenCookies.clickedReindeer) {
+	  if (shouldClickReindeer() && FrozenCookies.autoReindeer) {
+	    Game.seasonPopup.click();
+      FrozenCookies.clickedReindeer = true;
+	  } 
+  } else if (Game.seasonPopup.time < Game.seasonPopup.getMinTime() && Game.seasonPopup.life == 0) {
+	    FrozenCookies.clickedReindeer = false;
+	}
+}
+
+function shouldClickGC() {
+  var responseDelay = 15;
+  if (Game.goldenCookie.life > 0 && FrozenCookies.autoGC) {
+    var etaReindeer = probabilitySpan('reindeer', Game.seasonPopup.time, 0.5) - Game.seasonPopup.time;
+    if (GCReindeerSynced()) {
+      if (Game.goldenCookie.life < etaReindeer) {
+        return true;
+      }
+    } else {
+      if (Game.goldenCookie.life >= responseDelay){
+        return false;
+      } else {
+        return true;
+      }
     }
   }
   return false;
@@ -1450,6 +1465,7 @@ function autoGC() {
   if (!FrozenCookies.clickedGC) {
 	  if (FrozenCookies.autoGC && shouldClickGC()) {
 	    FrozenCookies.clickedGC = true;
+	    FrozenCookies.GCPending = true;
 	    Game.goldenCookie.click();
 	  }
   } else if (Game.goldenCookie.time < Game.goldenCookie.getMinTime() && !Game.goldenCookie.life){
