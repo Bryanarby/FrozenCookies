@@ -501,7 +501,7 @@ function weightedReindeerValue() {
 
   var value = 0;
   
-  value += odds * cps;
+  // value += odds * cps;
   
   // Clot
   value += cookieInfo.clot.odds[wrathValue] * cps * 0.5;
