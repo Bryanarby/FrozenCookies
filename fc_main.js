@@ -1288,7 +1288,7 @@ function logging() {
  
 }
 
-function shouldClickGC() {
+function shouldClickReindeer() {
   if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
     if (FrozenCookies.nextClickable == 'gc') {
       //stall when gc, until end of life.. or we're already in a frenzy.
@@ -1306,7 +1306,7 @@ function shouldClickGC() {
 
 function autoReindeer() {
   if(!FrozenCookies.clickedReindeer) {
-	  if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
+	  if (shouldClickReindeer() && FrozenCookies.autoReindeer) {
 	    Game.seasonPopup.click();
       FrozenCookies.nextClickable = 'gc';
       FrozenCookies.clickedReindeer = true;
