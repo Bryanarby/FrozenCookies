@@ -215,8 +215,8 @@ function updateTimers() {
     
     //todo make this season dynamic
     reindeer_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.5) - Game.seasonPopup.time) / maxReindeerTime(),
-    reindeer_max_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.5) - Game.seasonPopup.time) / maxReindeerTime(),
-    reindeer_min_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.5) - Game.seasonPopup.time) / maxReindeerTime(),
+    reindeer_max_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.99) - Game.seasonPopup.time) / maxReindeerTime(),
+    reindeer_min_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.01) - Game.seasonPopup.time) / maxReindeerTime(),
     
     frenzy_delay = Game.frenzy / maxCookieTime(),
     click_frenzy_delay = Game.clickFrenzy / maxCookieTime(),
