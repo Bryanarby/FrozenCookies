@@ -490,6 +490,50 @@ function baseClickingCps(clickSpeed) {
   return clickSpeed * cpc;
 }
 
+
+function weightedReindeerValue() {
+  var reindeerMod = Game.Has('Ho ho ho-flavored frosting') ? 120 : 60;
+  var luckyMod = Game.Has('Get lucky') ? 2 : 1;
+  var wrathValue = Game.elderWrath;
+
+  //base reindeer value
+  var cps = (baseCps() * reindeerMod > 25) ? baseCps() * reindeerMod : 25;
+
+  var value = 0;
+  
+  value += odds * cps;
+  
+  // Clot
+  value += cookieInfo.clot.odds[wrathValue] * cps * 0.5;
+  // Frenzy
+  value += cookieInfo.frenzy.odds[wrathValue] * cps * 7;
+  // Blood
+  value += cookieInfo.blood.odds[wrathValue] * cps * 666;
+  // Chain
+  value += cookieInfo.chain.odds[wrathValue] * cps;
+  // Ruin
+  value -= cookieInfo.ruin.odds[wrathValue] * cps;
+  // Frenzy + Ruin
+  value -= cookieInfo.frenzyRuin.odds[wrathValue] * cps * 7;
+  // Clot + Ruin
+  value -= cookieInfo.clotRuin.odds[wrathValue] * cps * 0.5;
+  // Lucky
+  value += cookieInfo.lucky.odds[wrathValue] * cps;
+  // Frenzy + Lucky
+  value += cookieInfo.frenzyLucky.odds[wrathValue] * cps * 7;
+  // Clot + Lucky
+  value += cookieInfo.clotLucky.odds[wrathValue] * cps * 0.5;
+  // Click
+  value += cookieInfo.click.odds[wrathValue] * cps;
+  // Frenzy + Click
+  value += cookieInfo.click.odds[wrathValue] * cps * 7;
+  // Clot + Click
+  value += cookieInfo.click.odds[wrathValue] * cps * 0.5;
+  // Blah
+  value += cps;
+  return value;
+}
+
 function cookieValue(bankAmount) {
   var cps = baseCps();
   var clickCps = baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
@@ -644,18 +688,17 @@ function maxCookieTime() {
   return Game.goldenCookie.maxTime
 }
 
-function reindeercPs() {
-  var cps = reindeerValue();
+function reindeercPs(deerValue) {
   //var averageReindeerTime = Game.Has('Reindeer baking grounds') ? 4311.606 / Game.fps : 7011.606 / Game.fps;
   var averageReindeerTime = probabilitySpan('reindeer', 0, 0.5) / Game.fps;
-  cps /= averageReindeerTime;
-  cps *= (FrozenCookies.autoReindeer) ? 100 : 0;
-  return cps;
+  deerValue /= averageReindeerTime;
+  deerValue *= (FrozenCookies.autoReindeer) ? 100 : 0;
+  return deerValue;
 }
 
 function seasoncPs(gcValue) {
   switch (Game.season) {
-    case 'christmas': return reindeercPs();
+    case 'christmas': return reindeercPs(weightedReindeerValue());
   }
   return 0;
 }
