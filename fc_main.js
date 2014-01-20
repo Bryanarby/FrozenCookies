@@ -65,6 +65,7 @@ function setOverrides() {
   FrozenCookies.clickedGC = false;
   FrozenCookies.clickedReindeer = false;
   FrozenCookies.logWindow = 2;
+  FrozenCookies.nextClickable = "";
   
   if (!blacklist[FrozenCookies.blacklist]) {
     FrozenCookies.blacklist = 'none';
@@ -645,7 +646,8 @@ function maxCookieTime() {
 
 function reindeercPs() {
   var cps = reindeerValue();
-  var averageReindeerTime = Game.Has('Reindeer baking grounds') ? 4311.606 / Game.fps : 7011.606 / Game.fps;
+  //var averageReindeerTime = Game.Has('Reindeer baking grounds') ? 4311.606 / Game.fps : 7011.606 / Game.fps;
+  var averageReindeerTime = probabilitySpan('reindeer', 0, 0.5) / Game.fps;
   cps /= averageReindeerTime;
   cps *= (FrozenCookies.autoReindeer) ? 100 : 0;
   return cps;
@@ -1247,20 +1249,6 @@ function inRect(x,y,rect) {
 	return (x2 > -0.5 * rect.w && x2 < 0.5 * rect.w && y2 > -0.5 * rect.h && y2 < 0.5 * rect.h);
 }
 
-// Unused
-function shouldClickGC() {
-  return Game.goldenCookie.life > 0 && FrozenCookies.autoGC;
-}
-
-// Unused
-function autoGoldenCookie() {
-  if (!FrozenCookies.processing && Game.goldenCookie.life) {
-    FrozenCookies.processing = true;
-    Game.goldenCookie.click();
-    FrozenCookies.processing = false;
-  }
-}
-
 function autoFrenzyClick() {
   if(FrozenCookies.frenzyClickSpeed){	
     if (Game.clickFrenzy > 0 && !FrozenCookies.autoFrenzyBot) {
@@ -1300,11 +1288,28 @@ function logging() {
  
 }
 
+function shouldClickGC() {
+  if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
+    if (FrozenCookies.nextClickable == 'gc') {
+      //stall when gc, until end of life.. or we're already in a frenzy.
+      //todo logic to think about chance of frenzy-extender.
+      if(Game.seasonPopup.life == 1 || (Game.frenzy > 0 && Game.frenzyPower >= 1)){
+      	return true;
+      }  	
+    } else {
+      return true;
+    }
+  }
+  return false;
+}
+
+
 function autoReindeer() {
   if(!FrozenCookies.clickedReindeer) {
 	  if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
 	    Game.seasonPopup.click();
-	    FrozenCookies.clickedReindeer = true;
+      FrozenCookies.nextClickable = 'gc';
+      FrozenCookies.clickedReindeer = true;
 	  } 
   } else if (Game.seasonPopup.time < Game.seasonPopup.getMinTime() && Game.seasonPopup.life == 0) {
 	    FrozenCookies.clickedReindeer = false;
@@ -1385,11 +1390,34 @@ function autoWrinkler() {
   }
 }
 
+function shouldClickGC() {
+  if (Game.goldenCookie.life > 0 && FrozenCookies.autoGC) {
+    if (FrozenCookies.nextClickable == 'reindeer') {
+      //todo add smart gimick to use cookie chains to align reindeers with GC more often.
+      
+      //stall when reindeer, until end of life.. or we're already in a frenzy.
+      //todo logic to think about chance of frenzy-extender.
+      if(Game.goldenCookie.life == 1 || (Game.frenzy > 0 && Game.frenzyPower >= 1)){
+      	return true;
+      }  	
+    } else {
+      return true;
+    }
+    
+  }
+  return false;
+}
+
 function autoGC() {
   if (!FrozenCookies.clickedGC) {
-	  if (Game.goldenCookie.life && FrozenCookies.autoGC && !FrozenCookies.clickedGC) {
+	  if (FrozenCookies.autoGC && shouldClickGC()) {
 	    FrozenCookies.clickedGC = true;
 	    Game.goldenCookie.click();
+	    if(Game.goldenCookie.chain){
+	    	FrozenCookies.nextClickable = 'gc';
+	    }else {
+	    	FrozenCookies.nextClickable = 'reindeer';
+	    }
 	  }
   } else if (Game.goldenCookie.time < Game.goldenCookie.getMinTime() && !Game.goldenCookie.life){
     FrozenCookies.clickedGC = false;
