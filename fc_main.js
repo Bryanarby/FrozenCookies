@@ -65,7 +65,7 @@ function setOverrides() {
   FrozenCookies.clickedGC = false;
   FrozenCookies.clickedReindeer = false;
   FrozenCookies.logWindow = 2;
-  FrozenCookies.nextClickable = "";
+  FrozenCookies.clickableAlive = 0;
   
   if (!blacklist[FrozenCookies.blacklist]) {
     FrozenCookies.blacklist = 'none';
@@ -1333,10 +1333,9 @@ function logging() {
 
 function shouldClickReindeer() {
   if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
-    if (FrozenCookies.nextClickable == 'gc') {
-      //stall when gc, until end of life.. or we're already in a frenzy.
-      //todo logic to think about chance of frenzy-extender.
-      if(Game.seasonPopup.life == 1 || (Game.frenzy > 0 && Game.frenzyPower >= 1)){
+    //stall to wait for cookie effect, or when we're in a clot
+    if (Game.goldenCookie.life > 0 || (Game.frenzy > 0 && Game.frenzyPower < 1)) {
+      if(Game.seasonPopup.life == 1 ){
       	return true;
       }  	
     } else {
@@ -1351,7 +1350,6 @@ function autoReindeer() {
   if(!FrozenCookies.clickedReindeer) {
 	  if (shouldClickReindeer() && FrozenCookies.autoReindeer) {
 	    Game.seasonPopup.click();
-      FrozenCookies.nextClickable = 'gc';
       FrozenCookies.clickedReindeer = true;
 	  } 
   } else if (Game.seasonPopup.time < Game.seasonPopup.getMinTime() && Game.seasonPopup.life == 0) {
@@ -1435,18 +1433,15 @@ function autoWrinkler() {
 
 function shouldClickGC() {
   if (Game.goldenCookie.life > 0 && FrozenCookies.autoGC) {
-    if (FrozenCookies.nextClickable == 'reindeer') {
-      //todo add smart gimick to use cookie chains to align reindeers with GC more often.
-      
-      //stall when reindeer, until end of life.. or we're already in a frenzy.
-      //todo logic to think about chance of frenzy-extender.
-      if(Game.goldenCookie.life == 1 || (Game.frenzy > 0 && Game.frenzyPower >= 1)){
+    //stall when no reindeer, until end of life.. or when clot..
+    //todo add smart gimick to use cookie chains to align reindeers with GC more often.
+    if (Game.seasonPopup.life == 0 || (Game.frenzy > 0 && Game.frenzyPower < 1)) {
+      if(Game.goldenCookie.life == 1 ){
       	return true;
       }  	
     } else {
       return true;
     }
-    
   }
   return false;
 }
@@ -1456,11 +1451,6 @@ function autoGC() {
 	  if (FrozenCookies.autoGC && shouldClickGC()) {
 	    FrozenCookies.clickedGC = true;
 	    Game.goldenCookie.click();
-	    if(Game.goldenCookie.chain){
-	    	FrozenCookies.nextClickable = 'gc';
-	    }else {
-	    	FrozenCookies.nextClickable = 'reindeer';
-	    }
 	  }
   } else if (Game.goldenCookie.time < Game.goldenCookie.getMinTime() && !Game.goldenCookie.life){
     FrozenCookies.clickedGC = false;
