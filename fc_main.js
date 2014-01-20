@@ -1333,8 +1333,8 @@ function logging() {
 
 function shouldClickReindeer() {
   if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
-    //stall to wait for cookie effect, or when we're in a clot
-    if (Game.goldenCookie.life > 0 || (Game.frenzy > 0 && Game.frenzyPower < 1)) {
+    //stall if there's no frenzy, or when we're in a clot
+    if (Game.frenzy == 0 || (Game.frenzy > 0 && Game.frenzyPower < 1)) {
       if(Game.seasonPopup.life == 1 ){
       	return true;
       }  	
