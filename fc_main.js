@@ -1413,18 +1413,21 @@ function GCReindeerSynced() {
 }
 
 function shouldClickReindeer() {
-  var responseDelay = 15;
+  var responseDelay = 10;
   if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
-    //stall if there's no frenzy, or when we're in a clot
-    if (Game.frenzy == 0 || (Game.frenzy > 0 && Game.frenzyPower < 1)) {
-      if(Game.seasonPopup.life <= responseDelay && !FrozenCookies.GCPending){
-              return true;
+    var etaGC = probabilitySpan('golden', Game.goldenCookie.time, 0.1) - Game.goldenCookie.time;
+    if (Game.seasonPopup.life >= etaGC || Game.recalculateGains) {
+      if(Game.seasonPopup.life <= responseDelay) {
+          return true;
       }          
     } else {
-      return true;
+	  if(!FrozenCookies.GCPending || Game.seasonPopup.life <= responseDelay) {		  
+        return true;
+	  } 
     }
   }
-  return false;}
+  return false;
+}
 
 function autoReindeer() {
   if(!FrozenCookies.clickedReindeer) {
@@ -1438,22 +1441,25 @@ function autoReindeer() {
 }
 
 function shouldClickGC() {
-  var responseDelay = 15;
+  var responseDelay = 10;
   if (Game.goldenCookie.life > 0 && FrozenCookies.autoGC) {
+    var etaReindeer = probabilitySpan('reindeer', Game.seasonPopup.time, 0.1) - Game.seasonPopup.time;
     //stall when no reindeer, until end of life.. or when clot..
     //todo add smart gimick to use cookie chains to align reindeers with GC more often.
-    if (Game.seasonPopup.life == 0 || (Game.frenzy > 0 && Game.frenzyPower < 1)) {
-      if(Game.goldenCookie.life <= responseDelay){
-              return true;
-      }          
+    if(!Game.goldenCookie.chain) {
+      if (!GCReindeerSynced() && !Game.seasonPopup.life) {
+        if(Game.goldenCookie.life <= responseDelay){
+          return true;
+        }          
+      } else {
+        return true;
+      } 
     } else {
       return true;
     }
   }
   return false;
-  return false;
 }
-
 function autoGC() {
   if (!FrozenCookies.clickedGC) {
 	  if (FrozenCookies.autoGC && shouldClickGC()) {
