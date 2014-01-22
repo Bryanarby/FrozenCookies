@@ -214,9 +214,9 @@ function updateTimers() {
     gc_min_delay = (probabilitySpan('golden', Game.goldenCookie.time, 0.01) - Game.goldenCookie.time) / maxCookieTime(),
     
     //todo make this season dynamic
-    reindeer_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.5) - Game.seasonPopup.time) / maxReindeerTime(),
-    reindeer_max_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.99) - Game.seasonPopup.time) / maxReindeerTime(),
-    reindeer_min_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.01) - Game.seasonPopup.time) / maxReindeerTime(),
+    reindeer_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.5) - Game.seasonPopup.time) / maxCookieTime(),
+    reindeer_max_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.99) - Game.seasonPopup.time) / maxCookieTime(),
+    reindeer_min_delay = (probabilitySpan('reindeer', Game.seasonPopup.time, 0.01) - Game.seasonPopup.time) / maxCookieTime(),
     
     frenzy_delay = Game.frenzy / maxCookieTime(),
     click_frenzy_delay = Game.clickFrenzy / maxCookieTime(),
@@ -303,22 +303,22 @@ function updateTimers() {
   if (reindeer_delay>0) {
     t_draw.push({
       f_percent: reindeer_max_delay,
-      c1: "rgba(0, 155, 0, 1)",
+      c1: "rgba(0, 175, 0, 1)",
       name: "Reindeer Maximum (99%)",
-      display: timeDisplay((reindeer_max_delay * maxReindeerTime()) / Game.fps)
+      display: timeDisplay((reindeer_max_delay * maxCookieTime()) / Game.fps)
     });
     t_draw.push({
       f_percent: reindeer_delay,
-      c1: "rgba(0, 195, 0, 1)",
+      c1: "rgba(0, 215, 0, 1)",
       name: "Reindeer Estimate (50%)",
-      display: timeDisplay((reindeer_delay * maxReindeerTime()) / Game.fps),
+      display: timeDisplay((reindeer_delay * maxCookieTime()) / Game.fps),
       overlay: true
     });
     t_draw.push({
       f_percent: reindeer_min_delay,
       c1: "rgba(0, 255, 0, 1)",
       name: "Reindeer Minimum (1%)",
-      display: timeDisplay((reindeer_min_delay * maxReindeerTime()) / Game.fps),
+      display: timeDisplay((reindeer_min_delay * maxCookieTime()) / Game.fps),
       overlay: true
 
     });
@@ -350,7 +350,6 @@ function updateTimers() {
   height = $('#backgroundLeftCanvas').height() - 140;
   drawCircles(t_draw, 20, height);
 }
-
 function FCMenu() {
   Game.UpdateMenu = function() {
     if (Game.onMenu !== 'fc_menu') {
