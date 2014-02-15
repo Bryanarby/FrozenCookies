@@ -207,7 +207,7 @@ function drawCircles(t_d, x, y) {
 }
 
 function updateTimers() {
-  var chainPurchase, bankPercent, purchasePercent, bankMax, actualCps, t_draw,
+  var chainPurchase, wrinklerPercent, bankPercent, purchasePercent, bankMax, actualCps, t_draw,
     maxColor, height,
     gc_delay = (probabilitySpan('golden', Game.goldenCookie.time, 0.5) - Game.goldenCookie.time) / maxCookieTime(),
     gc_max_delay = (probabilitySpan('golden', Game.goldenCookie.time, 0.99) - Game.goldenCookie.time) / maxCookieTime(),
@@ -222,9 +222,10 @@ function updateTimers() {
     click_frenzy_delay = Game.clickFrenzy / maxCookieTime(),
     decimal_HC_complete = ((Math.sqrt((Game.cookiesEarned + Game.cookiesReset)/0.5e12+0.25)-0.5)%1),
     bankTotal = delayAmount(),
+    wrinklerTotal = wrinklerValue(),
     purchaseTotal = nextPurchase().cost,
     bankCompletion = bankTotal ? (Math.min(Game.cookies, bankTotal)) / bankTotal : 0,
-    purchaseCompletion = Game.cookies/(bankTotal + purchaseTotal),
+    purchaseCompletion = (Game.cookies + wrinklerTotal) / (bankTotal + purchaseTotal),
     bankPurchaseCompletion = bankTotal/(bankTotal + purchaseTotal),
     chainTotal = 0,
     chainFinished,
@@ -236,6 +237,7 @@ function updateTimers() {
     chainCompletion = (chainFinished + Math.max(Game.cookies - bankTotal, 0)) / (bankTotal + chainTotal);
   }
   bankPercent = Math.min(Game.cookies, bankTotal) / (bankTotal + purchaseTotal);
+  wrinklerPercent = (wrinklerTotal + Math.min(Game.cookies, bankTotal)) / (bankTotal + purchaseTotal);
   purchasePercent = purchaseTotal / (purchaseTotal + bankTotal);
   bankMax = bankTotal / (purchaseTotal + bankTotal);
   actualCps = Game.cookiesPs + Game.mouseCps() * FrozenCookies.cookieClickSpeed;
@@ -247,7 +249,7 @@ function updateTimers() {
       f_percent: chainCompletion,
       c1: 'rgba(51, 51, 51, 1)',
       name: "Chain Completion Time",
-      display: timeDisplay(divCps(Math.max(chainTotal + bankTotal - Game.cookies - chainFinished,0), actualCps))
+      display: timeDisplay(divCps(Math.max(chainTotal + bankTotal - Game.cookies - wrinklerTotal - chainFinished,0), actualCps))
     });
   }
   if (purchaseTotal > 0) {
@@ -255,9 +257,18 @@ function updateTimers() {
       f_percent: purchaseCompletion,
       c1: 'rgba(17, 17, 17, 1)',
       name: "Purchase Completion Time",
-      display: timeDisplay(divCps(Math.max(purchaseTotal + bankTotal - Game.cookies,0), actualCps))
+      display: timeDisplay(divCps(Math.max(purchaseTotal + bankTotal - Game.cookies - wrinklerTotal,0), actualCps))
     });
   }
+  if (wrinklerTotal > 0) {
+   t_draw.push({
+    f_percent: wrinklerPercent,
+      name: "Wrinkler Value",
+      display: Beautify(wrinklerTotal),
+      c1: 'rgba(150, 0, 0, 1)',
+      overlay: true
+    });
+  }  
   if (bankMax > 0) {
     maxColor = (Game.cookies >= bankTotal) ? 'rgba(252, 212, 0, 1)' : 'rgba(201, 169, 0, 1)';
     t_draw.push({
@@ -349,8 +360,7 @@ function updateTimers() {
   }
   height = $('#backgroundLeftCanvas').height() - 140;
   drawCircles(t_draw, 20, height);
-}
-function FCMenu() {
+}function FCMenu() {
   Game.UpdateMenu = function() {
     if (Game.onMenu !== 'fc_menu') {
       return Game.oldUpdateMenu();
