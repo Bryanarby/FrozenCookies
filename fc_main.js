@@ -1340,7 +1340,7 @@ function shouldPopWrinkler(){
 function autoBuy() {
   var recommendation = nextPurchase(FrozenCookies.recalculateCaches);
   var wrinkler = biggestWrinkler();
-  if (FrozenCookies.autoBuy && (Game.cookies + wrinkler.sucked*1.1 >= delayAmount() + recommendation.cost) && (nextChainedPurchase().delta_cps > 0)) {
+  if (FrozenCookies.autoBuy && (Game.cookies + (wrinklerValue()*1.01) >= delayAmount() + recommendation.cost) && (nextChainedPurchase().delta_cps > 0)) {
     
     //actual check to give game to catch up with honoring the wrinkler exploding
     if ((Game.cookies >= delayAmount() + recommendation.cost)) {
@@ -1357,7 +1357,7 @@ function autoBuy() {
     	wrinkler.hp = 0;
     }
   }
-} 
+}
 
 function biggestWrinkler(){
  return Game.wrinklers.sort(function(a,b){return (b.sucked*1.1 - a.sucked*1.1)})[0];
@@ -1379,7 +1379,7 @@ function autoWrinkler() {
   if (FrozenCookies.autoWrinkler) {
     var recommendation = nextPurchase();	
     var popCount = 0;
-    if (!haveAllHalloween()) {
+    if (!haveAllHalloween()) { // && Game.season == 'halloween'
       Game.wrinklers.forEach(function(w) {
         if (w.sucked > 0.5 && w.phase > 0) {
           w.hp = 0;
@@ -1389,20 +1389,14 @@ function autoWrinkler() {
       if (popCount) {
         logEvent('Wrinkler', 'Popped ' + popCount + ' wrinklers in attempt to gain cookies.');
       }
-    } 
-    //there's no need to do this here.
-    /*else if (wrinklerValue() + Game.cookies >= delayAmount() + recommendation.cost) {
-      Game.wrinklers.forEach(function(w) {
-        if (w.phase) {
-          w.hp = 0;
-          popCount += 1;
-        }
-      });
-      if (popCount) {
-        logEvent('Wrinkler', 'Popped ' + popCount + ' wrinklers to make a purchase.');
-      }
-    }*/
-  }
+    }
+    // pop one after elder frenzy EXPERIMENTAL
+    /*if(Game.frenzy == 0 && Game.recalculateGains
+ && Game.frenzyPower == 666 && shouldPopWrinkler()){
+      Game.wrinklers[0].hp = 0;
+    }
+    */
+  } 
 }
 
 function GCReindeerSynced() {
@@ -1417,7 +1411,7 @@ function shouldClickReindeer() {
   if (Game.seasonPopup.life > 0 && FrozenCookies.autoReindeer) {
     var etaGC = probabilitySpan('golden', Game.goldenCookie.time, 0.1) - Game.goldenCookie.time;
     if (Game.seasonPopup.life >= etaGC || Game.recalculateGains) {
-      if(Game.seasonPopup.life <= responseDelay) {
+      if(Game.seasonPopup.life <= responseDelay || (Game.frenzy <= responseDelay && Game.frenzyPower >1)) {
           return true;
       }          
     } else {
@@ -1444,11 +1438,12 @@ function shouldClickGC() {
   var responseDelay = 10;
   if (Game.goldenCookie.life > 0 && FrozenCookies.autoGC) {
     var etaReindeer = probabilitySpan('reindeer', Game.seasonPopup.time, 0.1) - Game.seasonPopup.time;
+    var clickFrenzyTime = 13+13*Game.Has('Get lucky')*Game.fps;
     //stall when no reindeer, until end of life.. or when clot..
     //todo add smart gimick to use cookie chains to align reindeers with GC more often.
     if(!Game.goldenCookie.chain) {
       if (!GCReindeerSynced() && !Game.seasonPopup.life) {
-        if(Game.goldenCookie.life <= responseDelay){
+        if(Game.goldenCookie.life <= responseDelay || (Game.frenzy < responseDelay + clickFrenzyTime && Game.frenzyPower >1)){
           return true;
         }          
       } else {
@@ -1519,7 +1514,7 @@ function autoHCReset() {
 
 function updateCaches() {
   var recommendation, currentBank, targetBank, currentCookieCPS, currentUpgradeCount;
-	
+	do {
 	if (FrozenCookies.lastCPS != Game.cookiesPs) {
 	  FrozenCookies.recalculateCaches = true;
 	  FrozenCookies.lastCPS = Game.cookiesPs;
@@ -1549,12 +1544,8 @@ function updateCaches() {
 	  FrozenCookies.recalculateCaches = true;
 	  FrozenCookies.lastUpgradeCount = currentUpgradeCount;
 	}
-	
-	if (FrozenCookies.recalculateCaches) {
-		recommendation = nextPurchase(FrozenCookies.recalculateCaches);
-	}
+	}while(FrozenCookies.recalculateCaches);
 }
-
 function updateHeuristics() {
   var currentHCAmount = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
 	if (FrozenCookies.lastHCAmount < currentHCAmount) {
@@ -1575,7 +1566,7 @@ function updateHeuristics() {
 	  updateLocalStorage();
 	}
 
-	if ((Game.frenzy > 0) != FrozenCookies.last_gc_state) {
+	if (((Game.clickFrenzy > 0) != FrozenCookies.last_gc_state) && ((Game.frenzy > 0) != FrozenCookies.last_gc_state)) {
 	  if (FrozenCookies.last_gc_state) {
 		logEvent('GC', 'Frenzy ended, cookie production back to normal.');
 		logEvent('HC', 'Frenzy won ' + FrozenCookies.hcs_during_frenzy + ' heavenly chips');
@@ -1585,7 +1576,7 @@ function updateHeuristics() {
 		FrozenCookies.non_gc_time += Date.now() - FrozenCookies.last_gc_time;
 	  }
 	  updateLocalStorage();
-	  FrozenCookies.last_gc_state = (Game.frenzy > 0);
+	  FrozenCookies.last_gc_state = ((Game.frenzy > 0) || (Game.clickFrenzy > 0)) ? true : false;
 	  FrozenCookies.last_gc_time = Date.now();
 	}
 }
