@@ -199,7 +199,6 @@ var upgradeJson = [
   {'id':149,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
   
   //valentine cookies
-  169~174
   {'id':169,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[184]},
   {'id':170,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[184]},
   {'id':171,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[184]},
