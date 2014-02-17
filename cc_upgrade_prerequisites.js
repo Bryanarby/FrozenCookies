@@ -71,6 +71,7 @@ FrozenCookies.preferenceValues = {
 };
 
 var upgradeJson = [
+  //building upgrades
   {'id':0,'buildings':[1,0,0,0,0,0,0,0,0,0,0],'upgrades':[]},
   {'id':1,'buildings':[1,0,0,0,0,0,0,0,0,0,0],'upgrades':[]},
   {'id':2,'buildings':[10,0,0,0,0,0,0,0,0,0,0],'upgrades':[]},
@@ -152,6 +153,7 @@ var upgradeJson = [
   {'id':103,'buildings':[0,1,0,0,0,0,0,0,0,15,0],'upgrades':[]},
   {'id':180,'buildings':[0,1,0,0,0,0,0,0,0,0,15],'upgrades':[]},
   
+  // research
   {'id':64,'buildings':[0,6,0,0,0,0,0,0,0,0,0],'upgrades':[57,58,59,60,61,62,63]},
   {'id':65,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[64]},
   {'id':66,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[65]},
@@ -167,11 +169,47 @@ var upgradeJson = [
   {'id':84,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[73]},
   {'id':85,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[73]},
   
+  //unlock HC
   {'id':130,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[129]},
   {'id':131,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[130]},
   {'id':132,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[131]},
   {'id':133,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[132]},
   
+  //season upgrades
+  {'id':182,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[181]},
+  {'id':183,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[181]},
+  {'id':184,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[181]},
+  
+  //halloween cookies
+  {'id':134,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
+  {'id':135,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
+  {'id':136,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
+  {'id':137,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
+  {'id':138,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
+  {'id':139,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
+  {'id':140,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
+  
+  //christmas cookies
+  {'id':143,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
+  {'id':144,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
+  {'id':145,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
+  {'id':146,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
+  {'id':147,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
+  {'id':148,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
+  {'id':149,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
+  
+  //valentine cookies
+  169~174
+  {'id':169,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[184]},
+  {'id':170,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[184]},
+  {'id':171,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[184]},
+  {'id':172,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[184]},
+  {'id':173,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[184]},
+  {'id':174,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[184]},
+
+  
+  //santa
+  {'id':153,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
   {'id':153,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
   {'id':154,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
   {'id':155,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
@@ -187,6 +225,8 @@ var upgradeJson = [
   {'id':165,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
   {'id':166,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
   {'id':168,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':14},
+  
+  
 ];
 
 var blacklist = [
