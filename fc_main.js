@@ -77,7 +77,7 @@ function setOverrides() {
   Game.Reset = fcReset;
   Game.Win = fcWin;
   Game.oldBackground = Game.DrawBackground;
-  Game.DrawBackground = function() {Game.oldBackground(); updateTimers();}
+  Game.DrawBackground = function() {if(document.hasFocus()){Game.oldBackground(); updateTimers();}}
   // Remove the following when turning on tooltop code
   Game.RebuildStore();
   Game.RebuildUpgrades();
