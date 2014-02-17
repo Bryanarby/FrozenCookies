@@ -1384,7 +1384,7 @@ function autoWrinkler() {
   if (FrozenCookies.autoWrinkler) {
     var recommendation = nextPurchase();	
     var popCount = 0;
-    if (!haveAllHalloween()) { // && Game.season == 'halloween'
+    if (!haveAllHalloween() && Game.season == 'halloween') { // && Game.season == 'halloween'
       Game.wrinklers.forEach(function(w) {
         if (w.sucked > 0.5 && w.phase > 0) {
           w.hp = 0;
@@ -1563,7 +1563,7 @@ function updateHeuristics() {
 		FrozenCookies.maxHCPercent = currHCPercent;
 	  }
 	  var maxStr = (FrozenCookies.maxHCPercent === currHCPercent) ? ' (!)' : '';
-	  if (Game.frenzy === 0) {
+	  if (!(Game.frenzy > 0) && !(Game.clickFrenzy > 0)) {
 		logEvent('HC', 'Gained ' + changeAmount + ' Heavenly Chips in ' + timeDisplay((FrozenCookies.lastHCTime - FrozenCookies.prevLastHCTime)/1000) + '.' + maxStr + ' Overall average: ' + currHCPercent + ' HC/hr.');
 	  } else {
 		FrozenCookies.hcs_during_frenzy += changeAmount;
@@ -1571,7 +1571,7 @@ function updateHeuristics() {
 	  updateLocalStorage();
 	}
 
-	if (((Game.clickFrenzy > 0) != FrozenCookies.last_gc_state) && ((Game.frenzy > 0) != FrozenCookies.last_gc_state)) {
+	if ((Game.frenzy + Game.clickFrenzy > 0) != FrozenCookies.last_gc_state) {
 	  if (FrozenCookies.last_gc_state) {
 		logEvent('GC', 'Frenzy ended, cookie production back to normal.');
 		logEvent('HC', 'Frenzy won ' + FrozenCookies.hcs_during_frenzy + ' heavenly chips');
@@ -1581,7 +1581,7 @@ function updateHeuristics() {
 		FrozenCookies.non_gc_time += Date.now() - FrozenCookies.last_gc_time;
 	  }
 	  updateLocalStorage();
-	  FrozenCookies.last_gc_state = ((Game.frenzy > 0) || (Game.clickFrenzy > 0)) ? true : false;
+	  FrozenCookies.last_gc_state = (Game.frenzy + Game.clickFrenzy > 0);
 	  FrozenCookies.last_gc_time = Date.now();
 	}
 }
