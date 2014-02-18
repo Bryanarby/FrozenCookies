@@ -243,6 +243,10 @@ function timeDisplay(seconds) {
 
 function fcReset(bypass) {
   FrozenCookies.resetting = true;
+  Game.CollectWrinklers();
+  if(wrinklerValue()){
+    return fcReset(bypass);
+  }
   Game.oldReset(bypass);
   FrozenCookies.nonFrenzyTime = 0;
   FrozenCookies.frenzyTime = 0;
@@ -1494,7 +1498,7 @@ function resetBypass() {
 
 
 function autoHCReset() {
-  var currentHCAmount = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
+  var currentHCAmount = Game.HowMuchPrestige(Game.cookiesEarned + wrinklerValue() + Game.cookiesReset);
   if (FrozenCookies.autoHCReset) {
     if (currentHCAmount >= Game.prestige['Heavenly chips']+ FrozenCookies.HCResetValue) {
     //do the appropriate checks
@@ -1610,7 +1614,7 @@ function autoCookie2() {
 function autoCookie() {
   if (!FrozenCookies.processing) {
     FrozenCookies.processing = true;
-    var currentHCAmount = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
+    var currentHCAmount = Game.HowMuchPrestige(Game.cookiesEarned + wrinklerValue() + Game.cookiesReset);
     if (FrozenCookies.lastHCAmount < currentHCAmount) {
       var changeAmount = currentHCAmount - FrozenCookies.lastHCAmount;
       FrozenCookies.lastHCAmount = currentHCAmount;
