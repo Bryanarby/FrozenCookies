@@ -91,6 +91,9 @@ function setOverrides() {
   eval("Game.goldenCookie.click = " + Game.goldenCookie.click.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("GC", $1, true); FrozenCookies.GCPending = false;'));
   eval("Game.UpdateWrinklers = " + Game.UpdateWrinklers.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("Wrinkler", $1, true);'));
   eval("Game.seasonPopup.click = " + Game.seasonPopup.click.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("Reindeer", $1, true);'));
+  
+  //patching out useless cpu pressure.
+  eval("Game.Logic = " + Game.Logic.toString().replace(/if \(Game.mousePointer\) l\(\'sectionLeft\'\).style.cursor\=\'pointer\';/,'').replace(/else l\(\'sectionLeft\'\).style.cursor\=\'auto\';/,''));
   /*
   eval("Game.Draw = " + Game.Draw.toString()
     .replace(/if \(Game.cookies>=me.price\) l\('product'\+me.id\).className='product enabled'; else l\('product'\+me.id\).className='product disabled';/, '(Game.cookies >= me.price) ? $("#product"+me.id).addClass("enabled").removeClass("disabled") : $("#product"+me.id).addClass("disabled").removeClass("enabled");')
