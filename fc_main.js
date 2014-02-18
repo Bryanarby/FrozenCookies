@@ -243,10 +243,6 @@ function timeDisplay(seconds) {
 
 function fcReset(bypass) {
   FrozenCookies.resetting = true;
-  Game.CollectWrinklers();
-  if(wrinklerValue()){
-    return fcReset(bypass);
-  }
   Game.oldReset(bypass);
   FrozenCookies.nonFrenzyTime = 0;
   FrozenCookies.frenzyTime = 0;
@@ -1170,13 +1166,15 @@ function buyFunctionToggle(upgrade) {
     
     var ignoreFunctions = [
       /Game\.Lock\('.*'\)/,
+      /for \(.*\)\{Game\.Unlock\(.*\)/, //season switcher
       /Game\.Unlock\(.*\)/,
       /Game\.Objects\['.*'\]\.drawFunction\(\)/,
       /Game\.SetResearch\('.*'\)/,
       /Game\.Upgrades\['.*'\]\.basePrice=.*/,
       /Game\.CollectWrinklers\(\)/,
       /Game\.Popup\(.*\)/,
-      /var drop=choose\(Game\.santaDrops\)/
+      /var drop=choose\(Game\.santaDrops\)/,
+      /\S/ //clenaup random character.
     ];
     var buyFunctions = upgrade.buyFunction.toString()
       .replace(/\n/g, '')
