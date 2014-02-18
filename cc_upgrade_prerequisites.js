@@ -181,13 +181,13 @@ var upgradeJson = [
   {'id':184,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[181]},
   
   //halloween cookies
-  {'id':134,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
-  {'id':135,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
-  {'id':136,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
-  {'id':137,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
-  {'id':138,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
-  {'id':139,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
-  {'id':140,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[183]},
+  {'id':134,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[69,183]},
+  {'id':135,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[69,183]},
+  {'id':136,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[69,183]},
+  {'id':137,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[69,183]},
+  {'id':138,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[69,183]},
+  {'id':139,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[69,183]},
+  {'id':140,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[69,183]},
   
   //christmas cookies
   {'id':143,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
