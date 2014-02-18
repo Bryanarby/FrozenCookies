@@ -1552,7 +1552,7 @@ function updateCaches() {
 	}while(FrozenCookies.recalculateCaches);
 }
 function updateHeuristics() {
-  var currentHCAmount = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
+  var currentHCAmount = Game.HowMuchPrestige(Game.cookiesEarned + wrinklerValue() + Game.cookiesReset);
 	if (FrozenCookies.lastHCAmount < currentHCAmount) {
 	  var changeAmount = currentHCAmount - FrozenCookies.lastHCAmount;
 	  FrozenCookies.lastHCAmount = currentHCAmount;
