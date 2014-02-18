@@ -94,6 +94,9 @@ function setOverrides() {
   
   //patching out useless cpu pressure.
   eval("Game.Logic = " + Game.Logic.toString().replace(/if \(Game.mousePointer\) l\(\'sectionLeft\'\).style.cursor\=\'pointer\';/,'').replace(/else l\(\'sectionLeft\'\).style.cursor\=\'auto\';/,''));
+  
+  //saving before closure
+  eval("window.onbeforeunload = " + window.onbeforeunload.toString().replace(/{/, '{cashInWrinklers(); Game.WriteSave();'));
   /*
   eval("Game.Draw = " + Game.Draw.toString()
     .replace(/if \(Game.cookies>=me.price\) l\('product'\+me.id\).className='product enabled'; else l\('product'\+me.id\).className='product disabled';/, '(Game.cookies >= me.price) ? $("#product"+me.id).addClass("enabled").removeClass("disabled") : $("#product"+me.id).addClass("disabled").removeClass("enabled");')
@@ -244,8 +247,14 @@ function timeDisplay(seconds) {
   return (days + hours + minutes + seconds).trim();
 }
 
+function cashInWrinklers() {
+  Game.CollectWrinklers();
+  Game.UpdateWrinklers();
+}
+
 function fcReset(bypass) {
   FrozenCookies.resetting = true;
+  cashInWrinklers();
   Game.oldReset(bypass);
   FrozenCookies.nonFrenzyTime = 0;
   FrozenCookies.frenzyTime = 0;
