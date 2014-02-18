@@ -1165,15 +1165,18 @@ function buyFunctionToggle(upgrade) {
     }
     
     var ignoreFunctions = [
-      /Game\.Lock\('.*'\)/,
-      /for \(.*\)\{Game\.Unlock\(.*\)/, //season switcher
-      /Game\.Unlock\(.*\)/,
+      /Game\.Lock\(.*\)/,
+      /.*season.*/,
+      /for \(var i in Game\.seasonTriggers\)\s*\{.*/, //season related.
+      /.*Game\.Unlock\(.*\).*/,
+      /Game\.computeSeasonPrices\(\)/,
       /Game\.Objects\['.*'\]\.drawFunction\(\)/,
       /Game\.SetResearch\('.*'\)/,
       /Game\.Upgrades\['.*'\]\.basePrice=.*/,
       /Game\.CollectWrinklers\(\)/,
       /Game\.Popup\(.*\)/,
       /var drop=choose\(Game\.santaDrops\)/,
+      //,
       /\S/ //clenaup random character.
     ];
     var buyFunctions = upgrade.buyFunction.toString()
