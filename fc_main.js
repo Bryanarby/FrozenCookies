@@ -714,8 +714,14 @@ function reindeercPs(deerValue) {
 }
 
 function seasoncPs(gcValue) {
-  switch (Game.season) {
-    case 'christmas': return reindeercPs(weightedReindeerValue());
+  //christmas upgrade with either: another season + said upgrade.. or no other + christmas.
+  var seasonUpgrades=(Game.UpgradesById[183].bought + Game.UpgradesById[184].bought);
+  if(Game.season=='christmas'|| Game.baseSeason=='christmas'){
+  	if(!seasonUpgrades){
+		return reindeercPs(weightedReindeerValue());
+	}
+  } else if(Game.UpgradesById[182].bought){
+  	return reindeercPs(weightedReindeerValue());
   }
   return 0;
 }
