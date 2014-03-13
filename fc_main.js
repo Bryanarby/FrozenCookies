@@ -85,7 +85,7 @@ function setOverrides() {
   Game.oldBackground = Game.DrawBackground;
   Game.DrawBackground = function() {Game.oldBackground(); updateTimers();}
   Game.oldDraw = Game.Draw;
-  Game.Draw = function() {if(document.hasFocus()){Game.oldDraw();}}
+  Game.Draw = function() {if(document.hasFocus() && $('#statGraphContainer').is(':hidden')){Game.oldDraw();}}
 
   // Remove the following when turning on tooltop code
   Game.RebuildStore();
@@ -1274,7 +1274,8 @@ function saveStats() {
   FrozenCookies.trackedStats.push({
     time: Date.now() - Game.startDate,
     baseCps: baseCps(),
-    effectiveCps: effectiveCps(),
+    effectiveCps:  effectiveCps(),
+    trueCps: Math.round((Game.cookiesEarned + wrinklerValue())/((Date.now()-Game.startDate)/1000)),
     hc: Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset)
   });
   FrozenCookies.trackDelay *= 1.5;
@@ -1302,7 +1303,7 @@ function viewStatGraphs() {
   if (FrozenCookies.trackedStats.length > 0 && (Date.now() - FrozenCookies.lastGraphDraw) > 1000) {
     FrozenCookies.lastGraphDraw = Date.now();
     $('#statGraphs').empty();
-    var graphs = $.jqplot('statGraphs', transpose(FrozenCookies.trackedStats.map(function(s) {return [[s.time / 1000, s.baseCps], [s.time / 1000, s.effectiveCps], [s.time / 1000, s.hc]]})),  // 
+    var graphs = $.jqplot('statGraphs', transpose(FrozenCookies.trackedStats.map(function(s) {return [[s.time / 1000, s.baseCps], [s.time / 1000, s.effectiveCps], [s.time / 1000, s.trueCps], [s.time / 1000, s.hc]]})),  // 
       {
         legend: {show: true},
         height: containerDiv.height() - 50,
@@ -1336,7 +1337,7 @@ function viewStatGraphs() {
           show: true,
           sizeAdjust: 15
         },
-        series: [{label: 'Base CPS'},{label:'Effective CPS'},{label:'Earned HC', yaxis: 'y2axis'}]
+        series: [{label: 'Base CPS'},{label: 'Effective CPS'},{label:'True CPS'},{label:'Earned HC', yaxis: 'y2axis'}]
       });
   }
 }
@@ -1475,10 +1476,10 @@ function autoBuy() {
 	    disabledPopups = false;
 	    recommendation.purchase.buy();
 	    logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
- 	    if(FrozenCookies.trackDelay > 10000){
+ 	    if(FrozenCookies.trackDelay > 15000){
 		FrozenCookies.trackDelay /= 2;
 	    } else{
-		FrozenCookies.trackDelay = 10000;
+		FrozenCookies.trackDelay = 15000;
 	    }
 	    disabledPopups = true;
 	    FrozenCookies.recalculateCaches = true;
@@ -1793,7 +1794,6 @@ function autoCookie() {
     var targetBank = bestBank(recommendation.efficiency);
     if (FrozenCookies.targetBank.cost != targetBank.cost) {
       FrozenCookies.recalculateCaches = true;
-      //logEvent('Bank', 'Target Bank level changed to ' + Beautify(targetBank.cost) + ' cookies.');
       FrozenCookies.targetBank = targetBank;
     }
     var currentCookieCPS = gcPs(cookieValue(currentBank.cost));
@@ -1807,7 +1807,6 @@ function autoCookie() {
       FrozenCookies.lastUpgradeCount = currentUpgradeCount;
     }
     if (FrozenCookies.recalculateCaches) {
-      //logEvent('Cache', 'Recalculating cached values.');
       recommendation = nextPurchase(FrozenCookies.recalculateCaches);
     }
     if (FrozenCookies.timeTravelAmount) {
@@ -1846,7 +1845,6 @@ function autoCookie() {
 
 function FCStart() {
   //  To allow polling frequency to change, clear intervals before setting new ones.
-  FrozenCookies
   if (FrozenCookies.cookieBot) {
     clearInterval(FrozenCookies.cookieBot);
     FrozenCookies.cookieBot = 0;
