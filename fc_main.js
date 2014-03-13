@@ -258,7 +258,7 @@ function fcReset(bypass) {
   FrozenCookies.resetting = true;
   cashInWrinklers();
   Game.oldReset(bypass);
-  FrozenCookies.trackDelay = 1000;  
+  FrozenCookies.trackDelay = 10000;  
   FrozenCookies.nonFrenzyTime = 0;
   FrozenCookies.frenzyTime = 0;
   FrozenCookies.last_gc_state = (Game.frenzy > 0);
@@ -1476,7 +1476,11 @@ function autoBuy() {
 	    disabledPopups = false;
 	    recommendation.purchase.buy();
 	    logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
+ 	    if(FrozenCookies.trackDelay > 10000){
 		FrozenCookies.trackDelay /= 2;
+	    } else{
+		FrozenCookies.trackDelay = 10000;
+	    }
 	    disabledPopups = true;
 	    FrozenCookies.recalculateCaches = true;
 	    FrozenCookies.processing = true;
