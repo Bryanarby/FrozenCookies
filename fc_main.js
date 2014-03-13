@@ -258,7 +258,7 @@ function fcReset(bypass) {
   FrozenCookies.resetting = true;
   cashInWrinklers();
   Game.oldReset(bypass);
-  FrozenCookies.trackDelay = Frozencookies.frequency;  
+  FrozenCookies.trackDelay = 1000;  
   FrozenCookies.nonFrenzyTime = 0;
   FrozenCookies.frenzyTime = 0;
   FrozenCookies.last_gc_state = (Game.frenzy > 0);
