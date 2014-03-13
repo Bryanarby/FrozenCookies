@@ -33,6 +33,7 @@ function setOverrides() {
   FrozenCookies.timeTravelAmount = 0;
   
   // Get historical data
+  FrozenCookies.trackDelay = Number(localStorage.getItem('trackDelay'));
   FrozenCookies.non_gc_time = Number(localStorage.getItem('nonFrenzyTime'));
   FrozenCookies.gc_time = Number(localStorage.getItem('frenzyTime'));
   FrozenCookies.lastHCAmount = Number(localStorage.getItem('lastHCAmount'));
@@ -49,10 +50,13 @@ function setOverrides() {
   FrozenCookies.currentBank = {'cost': 0, 'efficiency' : 0};
   FrozenCookies.targetBank = {'cost': 0, 'efficiency' : 0};
   FrozenCookies.disabledPopups = true;
+  FrozenCookies.trackedStats = [];
+  FrozenCookies.lastGraphDraw = 0;
   
   // Allow autoCookie to run
   FrozenCookies.processing = false;
   FrozenCookies.resetting = false;
+  FrozenCookies.priceReductionTest = false;
   
   FrozenCookies.cookieBot = 0;
   FrozenCookies.autoclickBot = 0;
@@ -199,13 +203,9 @@ var numberFormatters = [
   scientificNotation
 ];
 
-function fcBeautify (value, floats) {
+function fcBeautify (value) {
   var negative = (value < 0);
   value = Math.abs(value);
-  if(floats > 0){
-    value=Math.floor(value);  
-    value=Math.round(value*10000000)/10000000;//get rid of weird rounding errors
-  }
   var formatter = numberFormatters[FrozenCookies.numberDisplay];
   var output = formatter(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return negative ? '-' + output : output;
@@ -258,6 +258,7 @@ function fcReset(bypass) {
   FrozenCookies.resetting = true;
   cashInWrinklers();
   Game.oldReset(bypass);
+  FrozenCookies.trackDelay = Frozencookies.frequency;  
   FrozenCookies.nonFrenzyTime = 0;
   FrozenCookies.frenzyTime = 0;
   FrozenCookies.last_gc_state = (Game.frenzy > 0);
@@ -280,7 +281,7 @@ function updateLocalStorage() {
   _.keys(FrozenCookies.preferenceValues).forEach(function(preference) {
     localStorage[preference] = FrozenCookies[preference];
   });
-  
+  localStorage.trackDelay = FrozenCookies.trackDelay;
   localStorage.frenzyClickSpeed = FrozenCookies.frenzyClickSpeed;
   localStorage.cookieClickSpeed = FrozenCookies.cookieClickSpeed;
   localStorage.HCResetValue = FrozenCookies.HCResetValue;
@@ -402,6 +403,7 @@ function getFunctionByName(functionName){
     case 'autoHCReset': return this.autoHCReset; break;
     case 'autoReindeer': return this.autoReindeer; break;
     case 'autoWrinkler': return this.autoWrinkler; break;
+	case 'trackStats': return this.trackStats; break;
     default: return null; break;
   }
 }
@@ -411,7 +413,7 @@ function updateAutoCookies(preferenceName, value) {
   var func = getFunctionByName(preferenceName);
   var index = FrozenCookies.autoCookies.indexOf(func);
   //on/off?
-  if (value == 1) {
+  if (value >= 1) {
     //if not found
     if (index == -1) {
     	if (func !== null) {
@@ -553,6 +555,10 @@ function weightedReindeerValue() {
   return value;
 }
 
+function effectiveCps() {
+  return baseCps() + gcPs(cookieValue(delayAmount())) + baseClickingCps(FrozenCookies.cookieClickSpeed) + seasonCps();
+}
+
 function cookieValue(bankAmount) {
   var cps = baseCps();
   var clickCps = baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
@@ -560,13 +566,14 @@ function cookieValue(bankAmount) {
   var luckyMod = Game.Has('Get lucky') ? 2 : 1;
   var clickFrenzyMod = (Game.clickFrenzy > 0) ? 777 : 1
   var wrathValue = Game.elderWrath;
+  var wrinklerMod = (wrathValue && FrozenCookies.autoWrinkler && haveAllHalloween()) ? 6 : 1;
   var value = 0;
   // Clot
-  value -= cookieInfo.clot.odds[wrathValue] * (cps + clickCps) * luckyMod * 66 * 0.5;
+  value -= cookieInfo.clot.odds[wrathValue] * (cps + clickCps) * luckyMod * wrinklerMod * 66 * 0.5;
   // Frenzy
-  value += cookieInfo.frenzy.odds[wrathValue] * (cps + clickCps) * luckyMod * 77 * 7;
+  value += cookieInfo.frenzy.odds[wrathValue] * (cps + clickCps) * luckyMod * wrinklerMod * 77 * 7;
   // Blood
-  value += cookieInfo.blood.odds[wrathValue] * (cps + clickCps) * luckyMod * 666 * 6;
+  value += cookieInfo.blood.odds[wrathValue] * (cps + clickCps) * luckyMod * wrinklerMod * 666 * 6;
   // Chain
   value += cookieInfo.chain.odds[wrathValue] * calculateChainValue(bankAmount, cps, (7 - (wrathValue / 3)));
   // Ruin
@@ -584,9 +591,9 @@ function cookieValue(bankAmount) {
   // Click
   value += cookieInfo.click.odds[wrathValue] * frenzyCps * luckyMod * 13 * 777;
   // Frenzy + Click
-  value += cookieInfo.click.odds[wrathValue] * frenzyCps * luckyMod * 13 * 777 * 7;
+  value += cookieInfo.frenzyClick.odds[wrathValue] * frenzyCps * luckyMod * 13 * 777 * 7;
   // Clot + Click
-  value += cookieInfo.click.odds[wrathValue] * frenzyCps * luckyMod * 13 * 777 * 0.5;
+  value += cookieInfo.clotClick.odds[wrathValue] * frenzyCps * luckyMod * 13 * 777 * 0.5;
   // Blah
   value += 0;
   return value;
@@ -1016,7 +1023,7 @@ function upgradeStats(recalculate) {
 }
 
 function santaStats() {
-  return {
+  return Game.Has('A festive hat') ? {
     id: 0,
     efficiency: Infinity,
     base_delta_cps: 0,
@@ -1029,7 +1036,7 @@ function santaStats() {
       buy: buySanta,
       getCost: function() {return cumulativeSantaCost(1);}
     }
-  }
+  } : [];
 }
 
 function totalDiscount(type) {
@@ -1245,6 +1252,96 @@ function buySanta() {
   }
 }
 
+function statSpeed() {
+  var speed = 0;
+  switch (FrozenCookies.trackStats) {
+    case 1: // 60s
+      speed = 1000 * 60; 
+      break;
+    case 2: // 30m
+      speed = 1000 * 60 * 30;
+      break;
+    case 3: // 1h
+      speed = 1000 * 60 * 60;
+      break;
+    case 4: // 24h
+      speed = 1000 * 60 * 60 * 24;
+      break;
+  }
+  return speed;
+}
+
+function saveStats() {
+  FrozenCookies.trackedStats.push({
+    time: Date.now() - Game.startDate,
+    baseCps: baseCps(),
+    effectiveCps: effectiveCps(),
+    hc: Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset)
+  });
+  FrozenCookies.trackDelay *= 2;
+  if ($('#statGraphContainer').length > 0 && !$('#statGraphContainer').is(':hidden')) {
+    viewStatGraphs();
+  }
+}
+
+function viewStatGraphs() {
+  var containerDiv = $('#statGraphContainer').length ? 
+    $('#statGraphContainer') : 
+    $('<div>').attr('id', 'statGraphContainer')
+      .html($('<div>')
+      .attr('id', 'statGraphs'))
+      .appendTo('body')
+      .dialog({
+        modal:true, 
+        title: 'Frozen Cookies Tracked Stats',
+        width:$(window).width() * 0.8, 
+        height:$(window).height() * 0.8
+      });
+  if (containerDiv.is(':hidden')) {
+    containerDiv.dialog();
+  }
+  if (FrozenCookies.trackedStats.length > 0 && (Date.now() - FrozenCookies.lastGraphDraw) > 1000) {
+    FrozenCookies.lastGraphDraw = Date.now();
+    $('#statGraphs').empty();
+    var graphs = $.jqplot('statGraphs', transpose(FrozenCookies.trackedStats.map(function(s) {return [[s.time / 1000, s.baseCps], [s.time / 1000, s.effectiveCps], [s.time / 1000, s.hc]]})),  // 
+      {
+        legend: {show: true},
+        height: containerDiv.height() - 50,
+        axes: {
+          xaxis: {
+            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+            tickOptions: {
+              angle: -30,
+              fontSize: '10pt',
+              showGridline: false,
+              formatter: function(ah,ai) {return timeDisplay(ai);}
+            }
+          },
+          yaxis: {
+            padMin: 0,
+            renderer: $.jqplot.LogAxisRenderer,
+            tickDistribution: 'even',
+            tickOptions: {
+              formatter: function(ah,ai) {return Beautify(ai);}
+            }
+          },
+          y2axis: {
+            padMin: 0,
+            tickOptions: {
+              showGridline: false,
+              formatter: function(ah,ai) {return Beautify(ai);}
+            }
+          }
+        },
+        highlighter: {
+          show: true,
+          sizeAdjust: 15
+        },
+        series: [{label: 'Base CPS'},{label:'Effective CPS'},{label:'Earned HC', yaxis: 'y2axis'}]
+      });
+  }
+}
+
 function doTimeTravel() {
 //  'Time Travel DISABLED','Purchases by Estimated Effective CPS','Purchases by Simulated Real Time','Heavenly Chips by Estimated Effective CPS','Heavenly Chips by Simulated Real Time'
   if (FrozenCookies.timeTravelMethod) {
@@ -1303,7 +1400,6 @@ function logEvent(event, text, popup) {
   var output = time + ' ' + event + ': ' + text;
   if (FrozenCookies.logging) {
     FrozenCookies.caches.logs.push(output);
-    //console.log(output);
   }
   if (popup) {
     Game.Popup(text);
@@ -1374,12 +1470,13 @@ function autoBuy() {
     
     //actual check to give game to catch up with honoring the wrinkler exploding
     if ((Game.cookies >= delayAmount() + recommendation.cost)) {
-	    recommendation.time = Date.now() - Game.startDate;
+        recommendation.time = Date.now() - Game.startDate;
 	//  full_history.push(recommendation);  // Probably leaky, maybe laggy?
 	    recommendation.purchase.clickFunction = null;
 	    disabledPopups = false;
 	    recommendation.purchase.buy();
 	    logEvent('Store', 'Autobought ' + recommendation.purchase.name + ' for ' + Beautify(recommendation.cost) + ', resulting in ' + Beautify(recommendation.delta_cps) + ' CPS.');
+		FrozenCookies.trackDelay /= 2;
 	    disabledPopups = true;
 	    FrozenCookies.recalculateCaches = true;
 	    FrozenCookies.processing = true;
@@ -1387,6 +1484,10 @@ function autoBuy() {
     	wrinkler.hp = 0;
     }
   }
+}
+
+function transpose(a) {
+  return Object.keys(a[0]).map(function (c) { return a.map(function (r) { return r[c]; }); });
 }
 
 function biggestWrinkler(){
@@ -1467,6 +1568,9 @@ function autoReindeer() {
 function shouldClickGC() {
   var responseDelay = 10;
   if (Game.goldenCookie.life > 0 && FrozenCookies.autoGC) {
+    if( Game.pledgeT > 0){
+      return true;	
+    }
     var etaReindeer = probabilitySpan('reindeer', Game.seasonPopup.time, 0.1) - Game.seasonPopup.time;
     var clickFrenzyTime = 13+13*Game.Has('Get lucky')*Game.fps;
     //stall when no reindeer, until end of life.. or when clot..
@@ -1539,6 +1643,19 @@ function autoHCReset() {
         }
       }
     }
+  }
+}
+
+function trackStats() {
+  if (statSpeed(FrozenCookies.trackStats) > 0) {
+    FrozenCookies.statBot = setInterval(saveStats, statSpeed(FrozenCookies.trackStats));
+  } else if (FrozenCookies.trackStats == 6){
+    clearInterval(Frozencookies.statBot);
+	var timeNow = Date.now() - Game.startDate;
+	var trackTime = FrozenCookies.trackedStats[FrozenCookies.trackedStats.length - 1].time;
+	if( timeNow >= trackTime + FrozenCookies.trackDelay){
+      saveStats();
+    }	
   }
 }
 
@@ -1722,7 +1839,7 @@ function autoCookie() {
 
 function FCStart() {
   //  To allow polling frequency to change, clear intervals before setting new ones.
-  
+  FrozenCookies
   if (FrozenCookies.cookieBot) {
     clearInterval(FrozenCookies.cookieBot);
     FrozenCookies.cookieBot = 0;
