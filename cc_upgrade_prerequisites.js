@@ -65,7 +65,7 @@ FrozenCookies.preferenceValues = {
   },
   'trackStats':{
     'hint':'Track your CPS/HC earned over time during a single session to enable graphing. This may end up being *extremely* memory-intensive.',
-    'display':['Tracking OFF', 'Every 60s', 'Every 30m', 'Every 1h', 'Every 24h', 'On upgrades', 'Smart Tracking'],
+    'display':['Tracking OFF', 'Every 60s', 'Every 30m', 'Every 1h', 'Every 24h', 'On upgrades'],
     'default':0,
     'extras':'<a class="option" id="viewStats" onclick="viewStatGraphs();">View Stat Graphs</a>'
   },
@@ -95,7 +95,7 @@ var upgradeJson = [
   {'id':44,'buildings':[0,50,0,0,0,0,0,0,0,0,0],'upgrades':[]},
   {'id':110,'buildings':[0,100,0,0,0,0,0,0,0,0,0],'upgrades':[]},
   
-  {'id':10,'buildings':[0,0,1,0,0,0,0,0,0,0,0,0],'upgrades':[]},
+  {'id':10,'buildings':[0,0,1,0,0,0,0,0,0,0,0],'upgrades':[]},
   {'id':11,'buildings':[0,0,1,0,0,0,0,0,0,0,0],'upgrades':[]},
   {'id':12,'buildings':[0,0,10,0,0,0,0,0,0,0,0],'upgrades':[]},
   {'id':45,'buildings':[0,0,50,0,0,0,0,0,0,0,0],'upgrades':[]},
@@ -182,6 +182,24 @@ var upgradeJson = [
   {'id':133,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[132]},
   
   //season upgrades
+  //santa
+  {'id':152,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
+  {'id':153,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':154,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':155,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':156,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':157,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':158,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':159,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':160,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':161,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':162,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':163,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':164,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':165,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':166,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
+  {'id':168,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':14},
+  
   {'id':182,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[181]},
   {'id':183,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[181]},
   {'id':184,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[181]},
@@ -212,26 +230,7 @@ var upgradeJson = [
   {'id':173,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[172,184]},
   {'id':174,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[173,184]},
 
-  
-  //santa
-  {'id':152,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[182]},
-  {'id':153,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':154,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':155,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':156,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':157,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':158,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':159,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':160,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':161,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':162,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':163,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':164,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':165,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':166,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':1},
-  {'id':168,'buildings':[0,0,0,0,0,0,0,0,0,0,0],'upgrades':[152],'santa':14},
-  
-  
+   
 ];
 
 var blacklist = [
@@ -250,11 +249,21 @@ var blacklist = [
   {
     'upgrades': [71, 72, 73, 74, 84, 85],
     'buildings': []
+
+
+
+
   }
 ];
 
 var halloweenCookies = [134,135,136,137,138,139,140];
 var christmasCookies = [143,144,145,146,147,148,149];
+
+var holidayCookies = {
+  halloween: [134,135,136,137,138,139,140],
+  christmas: [143,144,145,146,147,148,149],
+  valentines: [169,170,171,172,173,174]
+}
 
 var cookieInfo = {
   'clot':        {'odds':[0,0.10386789477947,0.19565417350258,0.279830557040944],                   isOverlap:false},
