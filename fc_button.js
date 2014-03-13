@@ -16,7 +16,7 @@ $('<style type="text/css">')
   '.average {border-width:1px; border-style:solid; border-color:#663399;}' +
   '.good {border-width:1px; border-style:solid; border-color:#3399FF;}' +
   '.best {border-width:1px; border-style:solid; border-color:#00FFFF;}' +
-  '.ui-dialog {z-index:1000000;}'
+  '.ui-dialog {z-index:1000000;}'  
   )
   .appendTo('head');
 
@@ -361,7 +361,8 @@ function updateTimers() {
   }
   height = $('#backgroundLeftCanvas').height() - 140;
   drawCircles(t_draw, 20, height);
-}function FCMenu() {
+}
+function FCMenu() {
   Game.UpdateMenu = function() {
     if (Game.onMenu !== 'fc_menu') {
       return Game.oldUpdateMenu();
