@@ -1647,12 +1647,16 @@ function autoHCReset() {
 }
 
 function trackStats() {
-  if (statSpeed(FrozenCookies.trackStats) > 0) {
+  if (statSpeed(FrozenCookies.trackStats) > 0 && FrozenCookies.statBot > 0) {
     FrozenCookies.statBot = setInterval(saveStats, statSpeed(FrozenCookies.trackStats));
   } else if (FrozenCookies.trackStats == 6){
-    clearInterval(Frozencookies.statBot);
+    clearInterval(FrozenCookies.statBot);
+    FrozenCookies.statBot = 0;
 	var timeNow = Date.now() - Game.startDate;
-	var trackTime = FrozenCookies.trackedStats[FrozenCookies.trackedStats.length - 1].time;
+	var trackTime = 0;
+	if(FrozenCookies.trackedStats.length){
+	trackTime = FrozenCookies.trackedStats[FrozenCookies.trackedStats.length - 1].time;
+	}
 	if( timeNow >= trackTime + FrozenCookies.trackDelay){
       saveStats();
     }	
