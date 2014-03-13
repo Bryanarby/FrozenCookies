@@ -556,7 +556,7 @@ function weightedReindeerValue() {
 }
 
 function effectiveCps() {
-  return baseCps() + gcPs(cookieValue(delayAmount())) + baseClickingCps(FrozenCookies.cookieClickSpeed) + seasonCps();
+  return baseCps() + gcPs(cookieValue(delayAmount())) + baseClickingCps(FrozenCookies.cookieClickSpeed) + seasoncPs();
 }
 
 function cookieValue(bankAmount) {
