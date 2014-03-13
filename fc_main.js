@@ -27,13 +27,13 @@ function setOverrides() {
   // Separate because these are user-input values
   FrozenCookies.cookieClickSpeed = preferenceParse('cookieClickSpeed',0);
   FrozenCookies.frenzyClickSpeed = preferenceParse('frenzyClickSpeed',0);
-  FrozenCookies.HCResetValue = preferenceParse('HCResetValue',500);
+  FrozenCookies.trackDelay = preferenceParse('trackDelay',10000);
+   FrozenCookies.HCResetValue = preferenceParse('HCResetValue',500);
   
   // Becomes 0 almost immediately after user input, so default to 0
   FrozenCookies.timeTravelAmount = 0;
   
   // Get historical data
-  FrozenCookies.trackDelay = Number(localStorage.getItem('trackDelay'));
   FrozenCookies.non_gc_time = Number(localStorage.getItem('nonFrenzyTime'));
   FrozenCookies.gc_time = Number(localStorage.getItem('frenzyTime'));
   FrozenCookies.lastHCAmount = Number(localStorage.getItem('lastHCAmount'));
@@ -281,7 +281,6 @@ function updateLocalStorage() {
   _.keys(FrozenCookies.preferenceValues).forEach(function(preference) {
     localStorage[preference] = FrozenCookies[preference];
   });
-  localStorage.trackDelay = FrozenCookies.trackDelay;
   localStorage.frenzyClickSpeed = FrozenCookies.frenzyClickSpeed;
   localStorage.cookieClickSpeed = FrozenCookies.cookieClickSpeed;
   localStorage.HCResetValue = FrozenCookies.HCResetValue;
@@ -1278,7 +1277,7 @@ function saveStats() {
     effectiveCps: effectiveCps(),
     hc: Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset)
   });
-  FrozenCookies.trackDelay *= 2;
+  FrozenCookies.trackDelay *= 1.5;
   if ($('#statGraphContainer').length > 0 && !$('#statGraphContainer').is(':hidden')) {
     viewStatGraphs();
   }
