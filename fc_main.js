@@ -88,7 +88,7 @@ function setOverrides() {
   Game.Draw = function() {if(document.hasFocus() && $('#statGraphContainer').is(':hidden')){Game.oldDraw();}}
 
   // Remove the following when turning on tooltop code
-  Game.RebuildStore();
+  Game.RefreshStore()
   Game.RebuildUpgrades();
   beautifyUpgradesAndAchievements();
   // Replace Game.Popup references with event logging
