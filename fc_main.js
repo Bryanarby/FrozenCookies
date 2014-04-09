@@ -443,7 +443,7 @@ function cyclePreference(preferenceName) {
       updateAutoCookies(preferenceName, newValue);
       updateLocalStorage();
       FrozenCookies.recalculateCaches = true;
-      Game.RebuildStore();
+      Game.RefreshStore();
       Game.RebuildUpgrades();
       FCStart();
     }  
