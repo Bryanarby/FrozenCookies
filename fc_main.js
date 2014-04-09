@@ -97,7 +97,7 @@ function setOverrides() {
   eval("Game.seasonPopup.click = " + Game.seasonPopup.click.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("Reindeer", $1, true);'));
   
   //patching out useless cpu pressure.
-  eval("Game.Logic = " + Game.Logic.toString().replace(/if \(Game.mousePointer\) l\(\'sectionLeft\'\).style.cursor\=\'pointer\';/,'').replace(/else l\(\'sectionLeft\'\).style.cursor\=\'auto\';/,'')
+  //eval("Game.Logic = " + Game.Logic.toString().replace(/if \(Game.mousePointer\) l\(\'sectionLeft\'\).style.cursor\=\'pointer\';/,'').replace(/else l\(\'sectionLeft\'\).style.cursor\=\'auto\';/,'')
   //bugfix below.
   .replace(/Game\.Popup\(seasons\[Game\.season\]\);/, 'Game.Popup(seasons[Game.season]); for (var i in Game.seasonTriggers){Game.Unlock(Game.seasonTriggers[i]);}'));
   
