@@ -99,7 +99,7 @@ function setOverrides() {
   //patching out useless cpu pressure.
   //eval("Game.Logic = " + Game.Logic.toString().replace(/if \(Game.mousePointer\) l\(\'sectionLeft\'\).style.cursor\=\'pointer\';/,'').replace(/else l\(\'sectionLeft\'\).style.cursor\=\'auto\';/,'')
   //bugfix below.
-  .replace(/Game\.Popup\(seasons\[Game\.season\]\);/, 'Game.Popup(seasons[Game.season]); for (var i in Game.seasonTriggers){Game.Unlock(Game.seasonTriggers[i]);}'));
+  //.replace(/Game\.Popup\(seasons\[Game\.season\]\);/, 'Game.Popup(seasons[Game.season]); for (var i in Game.seasonTriggers){Game.Unlock(Game.seasonTriggers[i]);}'));
   
   //saving before closure
   eval("window.onbeforeunload = " + window.onbeforeunload.toString().replace(/{/, '{cashInWrinklers(); Game.WriteSave();'));
