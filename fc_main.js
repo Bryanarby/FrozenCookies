@@ -1022,7 +1022,7 @@ function upgradeStats(recalculate) {
 }
 
 function santaStats() {
-  return Game.Has('A festive hat') ? {
+  return {
     id: 0,
     efficiency: Infinity,
     base_delta_cps: 0,
@@ -1035,7 +1035,7 @@ function santaStats() {
       buy: buySanta,
       getCost: function() {return cumulativeSantaCost(1);}
     }
-  } : [];
+  }
 }
 
 function totalDiscount(type) {
