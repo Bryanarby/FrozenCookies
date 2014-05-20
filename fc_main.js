@@ -110,7 +110,6 @@ function setOverrides() {
   Game.RebuildUpgrades();
   beautifyUpgradesAndAchievements();
   // Replace Game.Popup references with event logging
-<<<<<<< HEAD
   eval("Game.goldenCookie.click = " + Game.goldenCookie.click.toString().replace(/Game\.Popup\((.+)\)\;/g, '\{logEvent("GC", $1, true); FrozenCookies.GCPending = false;\}'));
   eval("Game.UpdateWrinklers = " + Game.UpdateWrinklers.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("Wrinkler", $1, true);'));
   eval("Game.seasonPopup.click = " + Game.seasonPopup.click.toString().replace(/Game\.Popup\((.+)\)\;/g, 'logEvent("Reindeer", $1, true);'));
