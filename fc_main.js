@@ -661,11 +661,6 @@ function cookieStats(bankAmount, wrathValue, wrinklerCount) {
   return result;
 }
 
-function reindeerCps(wrathValue) {
-  var averageTime = probabilitySpan('reindeer', 0, 0.5) / Game.fps;
-  return reindeerValue(wrathValue) / averageTime * FrozenCookies.simulatedGCPercent;
-}
-
 function calculateChainValue(bankAmount, cps, digit) { 
   x = Math.min(bankAmount, (cps * 60 * 60 * 6 * 4));
   n = Math.floor(Math.log((9*x)/(4*digit))/Math.LN10);
@@ -764,26 +759,6 @@ function maxCookieTime() {
   return Game.goldenCookie.maxTime
 }
 
-function reindeercPs(deerValue) {
-  //var averageReindeerTime = Game.Has('Reindeer baking grounds') ? 4311.606 / Game.fps : 7011.606 / Game.fps;
-  var averageReindeerTime = probabilitySpan('reindeer', 0, 0.5) / Game.fps;
-  deerValue /= averageReindeerTime;
-  deerValue *= (FrozenCookies.autoReindeer) ? 100 : 0;
-  return deerValue;
-}
-
-function seasoncPs(gcValue) {
-  //christmas upgrade with either: another season + said upgrade.. or no other + christmas.
-  var seasonUpgrades=(Game.UpgradesById[183].bought + Game.UpgradesById[184].bought);
-  if(Game.season=='christmas'|| Game.baseSeason=='christmas'){
-  	if(!seasonUpgrades){
-		return reindeercPs(weightedReindeerValue());
-	}
-  } else if(Game.UpgradesById[182].bought){
-  	return reindeercPs(weightedReindeerValue());
-  }
-  return 0;
-}
 
 function gcPs(gcValue) {
   var averageGCTime = probabilitySpan('golden', 0, 0.5) / Game.fps;
@@ -897,11 +872,11 @@ function calcBuilding(current, aditionalCost, costReduction, index) {
       return null;
   }
   var baseCpsOrig = baseCps();
-  var cpsOrig = baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + seasoncPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
+  var cpsOrig = baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + reindeerCps() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
   var existingAchievements = Game.AchievementsById.map(function(item,i){return item.won});
   buildingToggle(current);
   var baseCpsNew = baseCps();
-  var cpsNew = baseCpsNew + gcPs(cookieValue(currentBank)) + seasoncPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
+  var cpsNew = baseCpsNew + gcPs(cookieValue(currentBank)) + reindeerCps() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
   buildingToggle(current, existingAchievements);
   var deltaCps = cpsNew - cpsOrig;
   var baseDeltaCps = baseCpsNew - baseCpsOrig;
@@ -950,12 +925,12 @@ function calcUpgrade(current, aditionalCost, costReduction, ignoreToggle) {
       return null;
     }
     var baseCpsOrig = baseCps();
-    var cpsOrig = baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + seasoncPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
+    var cpsOrig = baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + reindeerCps() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
     var existingAchievements = Game.AchievementsById.map(function(item){return item.won});
     var existingWrath = Game.elderWrath;
     if(!ignoreToggle) { var reverseFunctions = upgradeToggle(current);}
     var baseCpsNew = baseCps();
-    var cpsNew = baseCpsNew + gcPs(cookieValue(currentBank)) + seasoncPs() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
+    var cpsNew = baseCpsNew + gcPs(cookieValue(currentBank)) + reindeerCps() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
     if(!ignoreToggle) {upgradeToggle(current, existingAchievements, reverseFunctions);}
     Game.elderWrath = existingWrath;
     var deltaCps = cpsNew - cpsOrig;
