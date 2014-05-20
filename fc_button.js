@@ -465,7 +465,7 @@ function FCMenu() {
 
     subsection.append($('<div />').addClass('listing').html('<b>Base CPS' + clickStr + baseChosen + ':</b> ' + Beautify(cps)));
     subsection.append($('<div />').addClass('listing').html('<b>Frenzy CPS' + clickStr + frenzyChosen + ':</b> ' + Beautify(cps * 7)));
-    subsection.append($('<div />').addClass('listing').html('<b>Estimated Effective CPS:</b> ' + Beautify(cps + gcPs(cookieValue(Game.cookies)) + seasoncPs())));
+    subsection.append($('<div />').addClass('listing').html('<b>Estimated Effective CPS:</b> ' + Beautify(cps + gcPs(cookieValue(Game.cookies)) + reindeerCps())));
     var true_cps = Math.round((Game.cookiesEarned + wrinklerValue())/((Date.now()-Game.startDate)/1000));
     subsection.append($('<div />').addClass('listing').html('<b>True CPS:</b> ' + Beautify(true_cps)));
     subsection.append($('<div />').addClass('listing').html('<b>cps multiplier:</b> ' + true_cps/baseCps() + 'x'));
