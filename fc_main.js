@@ -1650,7 +1650,7 @@ function autoWrinkler() {
   if (FrozenCookies.autoWrinkler) {
     var recommendation = nextPurchase();	
     var popCount = 0;
-    if (!haveAllHalloween() && Game.season == 'halloween') {
+    if (!haveAll('halloween') && Game.season == 'halloween') {
       Game.wrinklers.forEach(function(w) {
         if (w.sucked > 0.5 && w.phase > 0) {
           w.hp = 0;
