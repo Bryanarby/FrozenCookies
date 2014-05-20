@@ -11,7 +11,7 @@
 
 // Dev:       https://raw.github.com/Icehawk78/FrozenCookies/development/
 // Master:    https://raw.github.com/Icehawk78/FrozenCookies/master/
-// Github.io: http://icehawk78.github.com/FrozenCookies/
+// Github.io: http://icehawk78.github.io/FrozenCookies/
 
 function LoadFrozenCookies() {
   var js = document.createElement('script');
@@ -21,5 +21,5 @@ function LoadFrozenCookies() {
   document.head.appendChild(js);
 }
 // It's not the best way but Chrome doesn't work with addEventListener... :(
-// Delay load by 2 seconds to allow the site to load itself first.)
-window.setTimeout(LoadFrozenCookies, 2000);
+// Delay load by 5 seconds to allow the site to load itself first.)
+window.setTimeout(LoadFrozenCookies, 5000);
