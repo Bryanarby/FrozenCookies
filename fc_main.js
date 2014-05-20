@@ -1878,5 +1878,14 @@ function FCStart() {
     FrozenCookies.cookieBot = setTimeout(autoCookie2, FrozenCookies.frequency);
   }
   
+  //fun when you remove it "eh won't be needing this"
+    if (FrozenCookies.autoClick && FrozenCookies.cookieClickSpeed) {
+    FrozenCookies.autoclickBot = setInterval(Game.ClickCookie, 1000 / FrozenCookies.cookieClickSpeed);
+  }
+  
+  if (FrozenCookies.autoFrenzy && FrozenCookies.frenzyClickSpeed) {
+    FrozenCookies.frenzyClickBot = setInterval(autoFrenzyClick, FrozenCookies.frequency);
+  }
+  
   FCMenu();
 }
