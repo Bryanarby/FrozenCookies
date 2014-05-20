@@ -560,6 +560,11 @@ function effectiveCps(delay, wrathValue, wrinklerCount) {
   }
   return baseCps() * wrinkler + gcPs(cookieValue(delay, wrathValue, wrinklerCount)) + baseClickingCps(FrozenCookies.cookieClickSpeed * FrozenCookies.autoClick) + reindeerCps(wrathValue);
 }
+function reindeerCps(wrathValue) {
+  var averageTime = probabilitySpan('reindeer', 0, 0.5) / Game.fps;
+  return reindeerValue(wrathValue) / averageTime * FrozenCookies.simulatedGCPercent;
+}
+
 
 function frenzyProbability(wrathValue) {
   wrathValue = wrathValue != null ? wrathValue : Game.elderWrath;
