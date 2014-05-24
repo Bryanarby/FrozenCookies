@@ -1595,8 +1595,9 @@ function autoBuy() {
 		FrozenCookies.trackDelay = 15000;
 	    }
 	    disabledPopups = true;
+		
 		//if the purchase costs less than 1 frame to regain.. skip recalculating the full list.
-		if(recommendation.cost < (recommendation.delta_cps/30)){
+		/*if(recommendation.cost < (recommendation.delta_cps/30)){
 			if(recommendation.type == "building"){
 				FrozenCookies.caches.nextPurchase = calcBuilding(recommendation.purchase);
 			}else {
@@ -1605,8 +1606,8 @@ function autoBuy() {
 				FrozenCookies.caches.nextPurchase = FrozenCookies.caches.recommendationList[0];
 			}
 		}else {
-			FrozenCookies.recalculateCaches = true;
-	    }
+		*/	FrozenCookies.recalculateCaches = true;
+	    //}
 		FrozenCookies.processing = true;
     } else if(shouldPopWrinkler()){
     	wrinkler.hp = 0;
