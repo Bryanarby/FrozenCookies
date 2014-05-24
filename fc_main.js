@@ -870,29 +870,22 @@ function nextChainedPurchase(recalculate) {
   return FrozenCookies.caches.nextChainedPurchase;
 }
 
-function calcBuilding(current, aditionalCost, costReduction, index) {
+function calcBuilding(current) {
   var buildingBlacklist = blacklist[FrozenCookies.blacklist].buildings;
   var currentBank = bestBank(0).cost;
   if (buildingBlacklist === true || _.contains(buildingBlacklist, current.id)) {
       return null;
   }
   var baseCpsOrig = baseCps();
-  var cpsOrig = baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + reindeerCps() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
+  var cpsOrig = effectiveCps(Math.min(Game.cookies, currentBank)); // baseCpsOrig + gcPs(cookieValue(Math.min(Game.cookies, currentBank))) + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
   var existingAchievements = Game.AchievementsById.map(function(item,i){return item.won});
   buildingToggle(current);
   var baseCpsNew = baseCps();
-  var cpsNew = baseCpsNew + gcPs(cookieValue(currentBank)) + reindeerCps() + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
+  var cpsNew = effectiveCps(currentBank); // baseCpsNew + gcPs(cookieValue(currentBank)) + baseClickingCps(FrozenCookies.autoClick * FrozenCookies.cookieClickSpeed);
   buildingToggle(current, existingAchievements);
   var deltaCps = cpsNew - cpsOrig;
   var baseDeltaCps = baseCpsNew - baseCpsOrig;
-  var cost = current.getPrice();
-  var efficiency= purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig);
-  if(aditionalCost > 0) {
-  	if(efficiency != Number.POSITIVE_INFINITY){
-		cost = current.getPrice()*((100-costReduction)/100)+ aditionalCost;
-	     efficiency = purchaseEfficiency(cost, deltaCps, baseDeltaCps, cpsOrig);
-    	}
-    }
+  var efficiency = purchaseEfficiency(current.getPrice(), deltaCps, baseDeltaCps, cpsOrig)
   return {'id' : current.id, 'efficiency' : efficiency, 'base_delta_cps' : baseDeltaCps, 'delta_cps' : deltaCps, 'cost' : current.getPrice(), 'purchase' : current, 'type' : 'building'};
 }
 
@@ -1602,8 +1595,19 @@ function autoBuy() {
 		FrozenCookies.trackDelay = 15000;
 	    }
 	    disabledPopups = true;
-	    FrozenCookies.recalculateCaches = true;
-	    FrozenCookies.processing = true;
+		//if the purchase costs less than 1 frame to regain.. skip recalculating the full list.
+		if(recommendation.cost < (recommendation.delta_cps/30)){
+			if(recommendation.type == "building"){
+				FrozenCookies.caches.nextPurchase = calcBuilding(recommendation.Id);
+			}else {
+				//pop the first one.
+				FrozenCookies.caches.recommendationList.shift();
+				FrozenCookies.caches.nextPurchase = FrozenCookies.caches.recommendationList[0];
+			}
+		}else {
+			FrozenCookies.recalculateCaches = true;
+	    }
+		FrozenCookies.processing = true;
     } else if(shouldPopWrinkler()){
     	wrinkler.hp = 0;
     }
