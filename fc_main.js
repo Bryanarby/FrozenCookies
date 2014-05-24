@@ -1598,7 +1598,7 @@ function autoBuy() {
 		//if the purchase costs less than 1 frame to regain.. skip recalculating the full list.
 		if(recommendation.cost < (recommendation.delta_cps/30)){
 			if(recommendation.type == "building"){
-				FrozenCookies.caches.nextPurchase = calcBuilding(recommendation.Id);
+				FrozenCookies.caches.nextPurchase = calcBuilding(recommendation.purchase);
 			}else {
 				//pop the first one.
 				FrozenCookies.caches.recommendationList.shift();
