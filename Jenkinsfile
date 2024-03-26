@@ -60,7 +60,7 @@ pipeline {
     stage('Deliver') {
       agent {
         node {
-          label 'linux'
+          label 'windows'
         }
 
       }
