@@ -14,8 +14,7 @@ pipeline {
 
       }
       steps {
-        build 'Build core'
-        stash(name: 'build', allowEmpty: true, includes: '**/target/*', useDefaultExcludes: true)
+        sh 'sleep 10'
       }
     }
 
@@ -32,9 +31,7 @@ pipeline {
             profile = 'est'
           }
           steps {
-            unstash 'build'
             sh 'sleep 30'
-            junit(allowEmptyResults: true, keepLongStdio: true, keepProperties: true, skipOldReports: true, testResults: 'estResults')
           }
         }
 
@@ -50,7 +47,6 @@ pipeline {
           }
           steps {
             sh 'sleep 45'
-            unstash 'build'
           }
         }
 
@@ -66,7 +62,6 @@ pipeline {
       }
       steps {
         sh 'sleep 20'
-        archiveArtifacts '/target/*.zip'
       }
     }
 
